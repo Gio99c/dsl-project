@@ -34,7 +34,7 @@ def cleaning(tweets):
 
 def text_mining(tweets): #must work on this function to improve perfomance
     lemmaTokenizer = LemmaTokenizer()                                                                      
-    vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=0.001)
+    vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=0.01)
     tfidf = vectorizer.fit_transform(tweets["text"])
     tweets_text_tfidf = pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
     tweets = pd.concat((tweets, tweets_text_tfidf), axis=1)
@@ -49,7 +49,7 @@ def preprocessing(tweets):
     tweets["month_of_year"] = list(map(lambda x: months_dict[x], tweets["month_of_year"]))
     tweets["day_of_month"] = list(map(lambda x: int(x), tweets["day_of_month"]))
     tweets["hour_of_day"] = list(map(lambda x: int(x), tweets["hour_of_day"]))
-    tweets["ids"] = ColumnTransformer([('somename', MinMaxScaler(), [0])], remainder='passthrough').fit_transform(tweets)
+    tweets["ids"] = ColumnTransformer([('somename', MinMaxScaler(), [1])], remainder='passthrough').fit_transform(tweets)
 
     y = tweets.pop("sentiment")
     X = tweets
