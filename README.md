@@ -7,6 +7,8 @@
 import numpy as np
 import pandas as pd
 import regex as re
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.compose import ColumnTransformer
 ```
 
 ## Dataset Load
@@ -18,7 +20,7 @@ import regex as re
 
       % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                      Dload  Upload   Total   Spent    Left  Speed
-    100 17.7M  100 17.7M    0     0  16.0M      0  0:00:01  0:00:01 --:--:-- 16.0M
+    100 17.7M  100 17.7M    0     0  16.9M      0  0:00:01  0:00:01 --:--:-- 16.9M
 
 
 
@@ -168,7 +170,31 @@ tweets
 
 
 
-## Data preprocessing
+## Data exploration
+
+
+```python
+len(tweets["user"].unique())
+```
+
+
+
+
+    10647
+
+
+
+
+```python
+len(tweets["ids"].unique())
+```
+
+
+
+
+    224716
+
+
 
 
 ```python
@@ -217,12 +243,12 @@ The _date_ feature contains several different information, these are retrived wi
 
 
 ```python
-tweets[["day_of_week", "month", "day", "time", "tz", "year"]] = tweets['date'].str.split(' ', expand=True)
+tweets[["day_of_week", "month_of_year", "day_of_month", "time", "tz", "year"]] = tweets['date'].str.split(' ', expand=True)
 ```
 
 
 ```python
-tweets[["hour", "minute", "second"]] = tweets['time'].str.split(':', expand=True)
+tweets[["hour_of_day", "minute", "second"]] = tweets['time'].str.split(':', expand=True)
 ```
 
 At this point, the information whose information have been extracted, can be removed
@@ -307,9 +333,9 @@ tweets
       <th>user</th>
       <th>text</th>
       <th>day_of_week</th>
-      <th>month</th>
-      <th>day</th>
-      <th>hour</th>
+      <th>month_of_year</th>
+      <th>day_of_month</th>
+      <th>hour_of_day</th>
     </tr>
   </thead>
   <tbody>
@@ -447,12 +473,12 @@ _night_ is a boolean feature
 
 
 ```python
-tweets["night"] = (tweets["hour"].astype("int") >= 18) | (tweets["hour"].astype("int") <= 5)
+tweets["night"] = (tweets["hour_of_day"].astype("int") >= 18) | (tweets["hour_of_day"].astype("int") <= 5)
 ```
 
 
 ```python
-#tweets.drop(columns=["hour"], inplace=True) // Choose to remove it or not
+#tweets.drop(columns=["hour_of_day"], inplace=True) // Choose to remove it or not
 ```
 
 
@@ -486,9 +512,9 @@ tweets
       <th>user</th>
       <th>text</th>
       <th>day_of_week</th>
-      <th>month</th>
-      <th>day</th>
-      <th>hour</th>
+      <th>month_of_year</th>
+      <th>day_of_month</th>
+      <th>hour_of_day</th>
       <th>night</th>
     </tr>
   </thead>
@@ -692,6 +718,32 @@ tweets["hashtags"]
 
 
 
+
+```python
+np.max(list(map(lambda x: len(x), tweets["hashtags"])))
+```
+
+
+
+
+    24
+
+
+
+
+```python
+np.mean(list(map(lambda x: len(x), tweets["hashtags"])))
+```
+
+
+
+
+    0.03572539712170102
+
+
+
+In media ci sono veramente pochi hashtag in ogni tweet, però in alcuni tweet ce ne sono tanti (24 in quello con più hashtags)
+
 ## Text mining
 
 
@@ -712,7 +764,7 @@ class LemmaTokenizer(object):
         return lemmas
 
 lemmaTokenizer = LemmaTokenizer()                                                                      
-vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="unicode")
+vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=0.001)
 tfidf = vectorizer.fit_transform(tweets["text"])
 ```
 
@@ -722,7 +774,8 @@ tfidf = vectorizer.fit_transform(tweets["text"])
 
 
 ```python
-pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
+tweets_text_tfidf = pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
+tweets_text_tfidf
 ```
 
 
@@ -752,21 +805,21 @@ pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
       <th>%</th>
       <th>&amp;</th>
       <th>'</th>
-      <th>''</th>
-      <th>''and</th>
-      <th>''la</th>
-      <th>''photos</th>
+      <th>'d</th>
+      <th>'ll</th>
+      <th>'m</th>
+      <th>'re</th>
       <th>...</th>
-      <th>øaø3ø£u</th>
-      <th>øoø</th>
-      <th>ø£øμuø§</th>
-      <th>ø§uuu</th>
-      <th>ø§uø3ø1uø</th>
-      <th>ø§uø§øaøμø§uø§øa</th>
-      <th>ø§ø</th>
-      <th>ø­uø</th>
-      <th>μa</th>
-      <th>μa1a</th>
+      <th>yet</th>
+      <th>yo</th>
+      <th>young</th>
+      <th>youngq</th>
+      <th>youtube</th>
+      <th>yr</th>
+      <th>yummy</th>
+      <th>yup</th>
+      <th>|</th>
+      <th>~</th>
     </tr>
   </thead>
   <tbody>
@@ -776,7 +829,7 @@ pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.250272</td>
+      <td>0.377964</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -968,7 +1021,7 @@ pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.159766</td>
+      <td>0.408248</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -988,7 +1041,7 @@ pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
     </tr>
     <tr>
       <th>224992</th>
-      <td>0.127275</td>
+      <td>0.447214</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -1012,7 +1065,7 @@ pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
     </tr>
     <tr>
       <th>224993</th>
-      <td>0.229561</td>
+      <td>0.632456</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -1036,12 +1089,731 @@ pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
     </tr>
   </tbody>
 </table>
-<p>224994 rows × 164475 columns</p>
+<p>224994 rows × 1030 columns</p>
 </div>
 
 
 
 
 ```python
-
+tweets = pd.concat((tweets, tweets_text_tfidf), axis=1)
 ```
+
+---
+Potremmo provare ad estrarre informazioni utili dagli username?
+Da implementare in seguito...
+---
+
+
+```python
+tweets.drop(columns=["user", "text", "mentioned", "hashtags"], inplace=True)
+```
+
+
+```python
+tweets
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sentiment</th>
+      <th>ids</th>
+      <th>day_of_week</th>
+      <th>month_of_year</th>
+      <th>day_of_month</th>
+      <th>hour_of_day</th>
+      <th>night</th>
+      <th>!</th>
+      <th>#</th>
+      <th>$</th>
+      <th>...</th>
+      <th>yet</th>
+      <th>yo</th>
+      <th>young</th>
+      <th>youngq</th>
+      <th>youtube</th>
+      <th>yr</th>
+      <th>yummy</th>
+      <th>yup</th>
+      <th>|</th>
+      <th>~</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1833972543</td>
+      <td>Mon</td>
+      <td>May</td>
+      <td>18</td>
+      <td>01</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1980318193</td>
+      <td>Sun</td>
+      <td>May</td>
+      <td>31</td>
+      <td>06</td>
+      <td>False</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>1994409198</td>
+      <td>Mon</td>
+      <td>Jun</td>
+      <td>01</td>
+      <td>11</td>
+      <td>False</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>1824749377</td>
+      <td>Sun</td>
+      <td>May</td>
+      <td>17</td>
+      <td>02</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>2001199113</td>
+      <td>Tue</td>
+      <td>Jun</td>
+      <td>02</td>
+      <td>00</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>224989</th>
+      <td>0</td>
+      <td>2261324310</td>
+      <td>Sat</td>
+      <td>Jun</td>
+      <td>20</td>
+      <td>20</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224990</th>
+      <td>1</td>
+      <td>1989408152</td>
+      <td>Mon</td>
+      <td>Jun</td>
+      <td>01</td>
+      <td>01</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224991</th>
+      <td>0</td>
+      <td>1991221316</td>
+      <td>Mon</td>
+      <td>Jun</td>
+      <td>01</td>
+      <td>06</td>
+      <td>False</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224992</th>
+      <td>0</td>
+      <td>2239702807</td>
+      <td>Fri</td>
+      <td>Jun</td>
+      <td>19</td>
+      <td>08</td>
+      <td>False</td>
+      <td>0.447214</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224993</th>
+      <td>1</td>
+      <td>2016018811</td>
+      <td>Wed</td>
+      <td>Jun</td>
+      <td>03</td>
+      <td>06</td>
+      <td>False</td>
+      <td>0.632456</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>224994 rows × 1036 columns</p>
+</div>
+
+
+
+## Preprocessing
+
+---
+Implement weekday and weekend
+
+---
+
+Map the days of the week into integers
+
+
+```python
+day_of_week_dict = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6, "Sun": 7}
+tweets["day_of_week"] = list(map(lambda x: day_of_week_dict[x], tweets["day_of_week"]))
+```
+
+Map the months of the year into integers
+
+
+```python
+months_dict = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
+tweets["month_of_year"] = list(map(lambda x: months_dict[x], tweets["month_of_year"]))
+```
+
+Convert day and hours into integers
+
+
+```python
+tweets["day_of_month"] = list(map(lambda x: int(x), tweets["day_of_month"]))
+```
+
+
+```python
+tweets["hour_of_day"] = list(map(lambda x: int(x), tweets["hour_of_day"]))
+```
+
+Normalize _ids_ attribute
+
+
+```python
+tweets["ids"] = ColumnTransformer([('somename', MinMaxScaler(), [0])], remainder='passthrough').fit_transform(tweets)
+```
+
+
+```python
+y = tweets.pop("sentiment")
+y
+```
+
+
+
+
+    0         1
+    1         1
+    2         1
+    3         0
+    4         0
+             ..
+    224989    0
+    224990    1
+    224991    0
+    224992    0
+    224993    1
+    Name: sentiment, Length: 224994, dtype: int64
+
+
+
+
+```python
+X = tweets
+X
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ids</th>
+      <th>day_of_week</th>
+      <th>month_of_year</th>
+      <th>day_of_month</th>
+      <th>hour_of_day</th>
+      <th>night</th>
+      <th>!</th>
+      <th>#</th>
+      <th>$</th>
+      <th>%</th>
+      <th>...</th>
+      <th>yet</th>
+      <th>yo</th>
+      <th>young</th>
+      <th>youngq</th>
+      <th>youtube</th>
+      <th>yr</th>
+      <th>yummy</th>
+      <th>yup</th>
+      <th>|</th>
+      <th>~</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.42508</td>
+      <td>1</td>
+      <td>5</td>
+      <td>18</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.594974</td>
+      <td>7</td>
+      <td>5</td>
+      <td>31</td>
+      <td>6</td>
+      <td>False</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.611332</td>
+      <td>1</td>
+      <td>6</td>
+      <td>1</td>
+      <td>11</td>
+      <td>False</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.414373</td>
+      <td>7</td>
+      <td>5</td>
+      <td>17</td>
+      <td>2</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.619215</td>
+      <td>2</td>
+      <td>6</td>
+      <td>2</td>
+      <td>0</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>224989</th>
+      <td>0.921197</td>
+      <td>6</td>
+      <td>6</td>
+      <td>20</td>
+      <td>20</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224990</th>
+      <td>0.605527</td>
+      <td>1</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224991</th>
+      <td>0.607632</td>
+      <td>1</td>
+      <td>6</td>
+      <td>1</td>
+      <td>6</td>
+      <td>False</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224992</th>
+      <td>0.896096</td>
+      <td>5</td>
+      <td>6</td>
+      <td>19</td>
+      <td>8</td>
+      <td>False</td>
+      <td>0.447214</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>224993</th>
+      <td>0.636419</td>
+      <td>3</td>
+      <td>6</td>
+      <td>3</td>
+      <td>6</td>
+      <td>False</td>
+      <td>0.632456</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>224994 rows × 1035 columns</p>
+</div>
+
+
