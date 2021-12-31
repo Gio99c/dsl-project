@@ -60,7 +60,7 @@ def preprocessing1(tweets):
 def create_hours_bins(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     bin_ranges = [0,2,  4, 8, 12, 16, 20, 24]
-    bin_names = ['Notte', 'Notte FOnda', 'Mattina Presto','Tarda Mattinata', 'Primo pomeriggio', ' Tardo Pomeriggio', 'Sera']
+    bin_names = ['Notte', 'Notte Fonda', 'Mattina Presto','Tarda Mattinata', 'Primo pomeriggio', ' Tardo Pomeriggio', 'Sera']
     dataframe['hours_bin'] = pd.cut(np.array(dataframe['hour_of_day'].astype("int")), include_lowest = True, bins= bin_ranges, labels = bin_names)
     dataframe = pd.get_dummies(data= dataframe, columns= ['hours_bin'], drop_first=True)
 
