@@ -67,7 +67,7 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets.drop(columns=["user", "text"], inplace=True) #For the moment
     return tweets
 
-def preprocessing(tweets: pd.DataFrame) -> pd.DataFrame:
+def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
     day_of_week_dict = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6, "Sun": 7}
     months_dict = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
     
@@ -75,12 +75,12 @@ def preprocessing(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets["month_of_year"] = list(map(lambda x: months_dict[x], tweets["month_of_year"]))
     tweets["day_of_month"] = list(map(lambda x: int(x), tweets["day_of_month"]))
     tweets["hour_of_day"] = list(map(lambda x: int(x), tweets["hour_of_day"]))
-    tweets["ids"] = ColumnTransformer([('somename', MinMaxScaler(), [1])], remainder='passthrough').fit_transform(tweets)
 
-    return tweets
+    #Normalization of the features
+    y = tweets.pop("sentiment")
+    X = pd.DataFrame(MinMaxScaler().fit_transform(tweets), columns=tweets.columns)
 
-    
-
+    return X, y
 
 def create_hours_bins(dataframe: pd.DataFrame) -> pd.DataFrame:
 
