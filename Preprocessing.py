@@ -1,7 +1,7 @@
 from os import device_encoding
 import numpy as np
 import pandas as pd
-#import regex as re
+import regex as re
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
@@ -11,6 +11,7 @@ from nltk.corpus import stopwords as sw
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from tqdm import tqdm
+import string
 
 class LemmaTokenizer(object):
     def __init__(self):
@@ -45,18 +46,24 @@ def cleaning(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets.drop_duplicates(subset=['text'],inplace=True)
     
     tweets["night"] = (tweets["hour_of_day"].astype("int") >= 18) | (tweets["hour_of_day"].astype("int") <= 5) # to verify with an histogram optimal times
+
     return tweets
 
-def text_mining(tweets: pd.DataFrame) -> pd.DataFrame: #must work on this function to improve perfomance
+def text_mining(tweets: pd.DataFrame, min_df=0.01) -> pd.DataFrame: #must work on this function to improve perfomance
     lemmaTokenizer = LemmaTokenizer()                                                                      
-    vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=0.01)
+    vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=min_df)
     tfidf = vectorizer.fit_transform(tweets["text"])
     tweets_text_tfidf = pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
     tweets = pd.concat((tweets, tweets_text_tfidf), axis=1)
+    print(tweets)
     tweets.drop(columns=["user", "text"], inplace=True) #For the moment
     return tweets
 
 def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
+
+    #text cleaning (hashtag #, urls and users @)
+    tweets["text"] = list(map(lambda x: re.sub("(#|@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"]))
+
     sentiment = np.array(list(map(lambda x: list(SentimentIntensityAnalyzer().polarity_scores(x).values()), tqdm(tweets["text"]))))
     tweets["neg"] = sentiment[:, 0]
     tweets["neu"] = sentiment[:, 1]
@@ -64,7 +71,6 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets["compound"] = sentiment[:, 3]
     tweets["polarity"] = list(map(lambda x: TextBlob(x).sentiment.polarity, tqdm(tweets["text"])))
     tweets["subjectivity"] = list(map(lambda x: TextBlob(x).sentiment.subjectivity, tqdm(tweets["text"])))
-    tweets.drop(columns=["user", "text"], inplace=True) #For the moment
     return tweets
 
 def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
@@ -83,8 +89,7 @@ def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
     return X, y
 
 def create_hours_bins(dataframe: pd.DataFrame) -> pd.DataFrame:
-
-    bin_ranges = [0,2,  4, 8, 12, 16, 20, 24]
+    bin_ranges = [0, 2, 4, 8, 12, 16, 20, 24]
     bin_names = ['Notte', 'Notte Fonda', 'Mattina Presto','Tarda Mattinata', 'Primo pomeriggio', ' Tardo Pomeriggio', 'Sera']
     dataframe['hours_bin'] = pd.cut(np.array(dataframe['hour_of_day'].astype("int")), include_lowest = True, bins= bin_ranges, labels = bin_names)
     dataframe = pd.get_dummies(data= dataframe, columns= ['hours_bin'], drop_first=True)
@@ -92,9 +97,8 @@ def create_hours_bins(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def create_pubblic_holiday(dataframe: pd.DataFrame) -> pd.DataFrame:
+def create_public_holiday(dataframe: pd.DataFrame) -> pd.DataFrame:
+    holidays_dict ={"Mon": False, "Tue": False, "Wed": False, "Thu": False, "Fri": False, "Sat": True, "Sun": True}
+    dataframe["public_holiday"] = list(map(lambda x: holidays_dict[x], dataframe["day_of_week"]))
 
-    holydays_dict ={"Mon": False, "Tue": False, "Wed": False, "Thu": False, "Fri": False, "Sat": True, "Sun": True}
-    dataframe["pubblic_holyday"] = list(map(lambda x: holydays_dict[x], dataframe["day_of_week"]))
-    
     return dataframe
