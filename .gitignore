@@ -2,3 +2,4 @@
 .DS_Store
 .ipynb_checkpoints/Jupyter EDA-checkpoint.ipynb
 __pycache__/Preprocessing.cpython-38.pyc
+.ipynb_checkpoints/ModelSelection-checkpoint.ipynb

@@ -47,22 +47,31 @@ def cleaning(tweets: pd.DataFrame) -> pd.DataFrame:
     
     tweets["night"] = (tweets["hour_of_day"].astype("int") >= 18) | (tweets["hour_of_day"].astype("int") <= 5) # to verify with an histogram optimal times
 
+    return tweets.sample(10000)
+
+def hashtag_tfidf(tweets: pd.DataFrame) -> pd.DataFrame:
+    tweets["hashtags"] = list(map(lambda t : " ".join(re.findall("#[\d\w]+", t)), tweets["text"]))
+    lemmaTokenizer = LemmaTokenizer()                                                                      
+    vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii")
+    tfidf = vectorizer.fit_transform(tweets["hashtags"])
+    hashtags_tfidf = pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
+    tweets = pd.DataFrame(np.column_stack([tweets,hashtags_tfidf]), columns=tweets.columns.append(hashtags_tfidf.columns)) #stack the two dataframes horizontally
+
     return tweets
 
-def text_mining(tweets: pd.DataFrame, min_df=0.01) -> pd.DataFrame: #must work on this function to improve perfomance
+def text_mining_tfdf(tweets: pd.DataFrame, min_df=0.01) -> pd.DataFrame: #must work on this function to improve perfomance
+    tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
     lemmaTokenizer = LemmaTokenizer()                                                                      
     vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=min_df)
-    tfidf = vectorizer.fit_transform(tweets["text"])
-    tweets_text_tfidf = pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
-    tweets = pd.concat((tweets, tweets_text_tfidf), axis=1)
-    print(tweets)
+    tfdf = vectorizer.fit_transform(tweets["text"])
+    tweets_text_tfdf = pd.DataFrame(tfdf.toarray(), columns=vectorizer.get_feature_names())
+    tweets = pd.DataFrame(np.column_stack([tweets,tweets_text_tfdf]), columns=tweets.columns.append(tweets_text_tfdf.columns)) #stack the two dataframes horizontally
     tweets.drop(columns=["user", "text"], inplace=True) #For the moment
     return tweets
 
 def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
 
-    #text cleaning (hashtag #, urls and users @)
-    tweets["text"] = list(map(lambda x: re.sub("(#|@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"]))
+    tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
 
     sentiment = np.array(list(map(lambda x: list(SentimentIntensityAnalyzer().polarity_scores(x).values()), tqdm(tweets["text"]))))
     tweets["neg"] = sentiment[:, 0]
@@ -83,7 +92,7 @@ def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
     tweets["hour_of_day"] = list(map(lambda x: int(x), tweets["hour_of_day"]))
 
     #Normalization of the features
-    y = tweets.pop("sentiment")
+    y = tweets.pop("sentiment").astype('int')
     X = pd.DataFrame(MinMaxScaler().fit_transform(tweets), columns=tweets.columns)
 
     return X, y
