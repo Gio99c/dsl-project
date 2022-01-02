@@ -77,7 +77,7 @@ def extract_date(tweets: pd.DataFrame) -> pd.DataFrame:
     
     tweets["night"] = (tweets["hour_of_day"].astype("int") >= 18) | (tweets["hour_of_day"].astype("int") <= 5) # to verify with an histogram optimal times
 
-    return tweets.sample(1000)
+    return tweets
 
 """
 def hashtag_tfidf(tweets: pd.DataFrame) -> pd.DataFrame:
@@ -148,3 +148,8 @@ def add_user_text(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets.drop(columns=["user"], inplace=True)
 
     return tweets
+
+def drop_long_text(tweets: pd.DataFrame, k = int) -> pd.DataFrame:
+    tweets['char_count'] = list(map(lambda x: len(x), tweets['text']))
+    
+    return tweets.loc[tweets['char_count'] < k]
