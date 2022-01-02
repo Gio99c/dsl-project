@@ -1,4 +1,4 @@
-from os import device_encoding
+from os import device_encoding, remove
 import numpy as np
 import pandas as pd
 import regex as re
@@ -12,6 +12,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from tqdm import tqdm
 import string
+import fasttext
 
 class LemmaTokenizer(object):
     def __init__(self):
@@ -23,6 +24,28 @@ class LemmaTokenizer(object):
             lemma = self.lemmatizer.lemmatize(t)
             lemmas.append(lemma)
         return lemmas
+
+def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series) -> pd.DataFrame:
+    text = np.array("__label__") + y_train.astype("str").values + np.array(" ") + X_train["text"].values
+    np.savetxt("tweets.txt", text, fmt="%s")
+    model = fasttext.train_supervised("tweets.txt")
+    remove("tweets.txt")
+
+    #lo so, questa cosa è poco leggibile, la migliorerò
+    scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns=["embedding_negativity", "embedding_positivity"])
+    scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns=["embedding_negativity", "embedding_positivity"])
+
+    X_train.drop(columns=["user", "text"], inplace=True) #For the moment
+    X_test.drop(columns=["user", "text"], inplace=True)
+
+    X_train = pd.DataFrame(np.column_stack([X_train, scores_dev]), columns=X_train.columns.append(scores_dev.columns))
+    X_test = pd.DataFrame(np.column_stack([X_test, scores_eval]), columns=X_test.columns.append(scores_eval.columns))
+
+    scaler = MinMaxScaler().fit(X_train)
+    X_train = pd.DataFrame(scaler.transform(X_train), columns=X_train.columns)
+    X_test = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns)
+
+    return X_train, X_test
 
 
 def load(filepath="./DSL2122_january_dataset/development.csv") -> pd.DataFrame:
@@ -42,12 +65,12 @@ def cleaning(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets.drop(columns= cols_to_drop, inplace=True)
 
     # Drop duplicates
-    tweets.drop_duplicates(subset= ['text','sentiment'], keep = 'first', inplace=True)
-    tweets.drop_duplicates(subset=['text'],inplace=True)
+    tweets.drop_duplicates(subset=['text', 'sentiment'], keep='first', inplace=True)
+    tweets.drop_duplicates(subset=['text'], inplace=True)
     
     tweets["night"] = (tweets["hour_of_day"].astype("int") >= 18) | (tweets["hour_of_day"].astype("int") <= 5) # to verify with an histogram optimal times
 
-    return tweets.sample(10000)
+    return tweets.sample(1000)
 
 def hashtag_tfidf(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets["hashtags"] = list(map(lambda t : " ".join(re.findall("#[\d\w]+", t)), tweets["text"]))
@@ -60,7 +83,7 @@ def hashtag_tfidf(tweets: pd.DataFrame) -> pd.DataFrame:
     return tweets
 
 def text_mining_tfdf(tweets: pd.DataFrame, min_df=0.01) -> pd.DataFrame: #must work on this function to improve perfomance
-    tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
+    #tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
     lemmaTokenizer = LemmaTokenizer()                                                                      
     vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=min_df)
     tfdf = vectorizer.fit_transform(tweets["text"])
@@ -69,7 +92,7 @@ def text_mining_tfdf(tweets: pd.DataFrame, min_df=0.01) -> pd.DataFrame: #must w
     return tweets
 
 def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
-    tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
+    #tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
 
     sentiment = np.array(list(map(lambda x: list(SentimentIntensityAnalyzer().polarity_scores(x).values()), tqdm(tweets["text"]))))
     tweets["neg"] = sentiment[:, 0]
@@ -81,8 +104,6 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     return tweets
 
 def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
-    tweets.drop(columns=["user", "text"], inplace=True) #For the moment
-
     day_of_week_dict = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6, "Sun": 7}
     months_dict = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
     
@@ -91,23 +112,23 @@ def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
     tweets["day_of_month"] = list(map(lambda x: int(x), tweets["day_of_month"]))
     tweets["hour_of_day"] = list(map(lambda x: int(x), tweets["hour_of_day"]))
 
-    #Normalization of the features
     y = tweets.pop("sentiment").astype('int')
-    X = pd.DataFrame(MinMaxScaler().fit_transform(tweets), columns=tweets.columns)
+    X = tweets
 
     return X, y
 
-def create_hours_bins(dataframe: pd.DataFrame) -> pd.DataFrame:
-    bin_ranges = [0, 2, 4, 8, 12, 16, 20, 24]
-    bin_names = ['Notte', 'Notte Fonda', 'Mattina Presto','Tarda Mattinata', 'Primo pomeriggio', ' Tardo Pomeriggio', 'Sera']
-    dataframe['hours_bin'] = pd.cut(np.array(dataframe['hour_of_day'].astype("int")), include_lowest = True, bins= bin_ranges, labels = bin_names)
-    dataframe = pd.get_dummies(data= dataframe, columns= ['hours_bin'], drop_first=True)
+def replace_pattern(tweets: pd.DataFrame) -> pd.DataFrame:
+    
+    # regex pattern
+    hashtags = "#[\d\w]+"
+    mentioned = "@[\d\w]+"
+    ampersand = "&[\d\w]+"
+    urls = '((www.[^s]+)|(https?://[^s]+))'
 
-    return dataframe
+    pat = hashtags + "|" + mentioned +  "|" + ampersand + "|" + urls
+    
+    repl = " "
+    
+    tweets['text'] = tweets['text'].str.replace(pat= pat, repl = repl, regex=True)
 
-
-def create_public_holiday(dataframe: pd.DataFrame) -> pd.DataFrame:
-    holidays_dict ={"Mon": False, "Tue": False, "Wed": False, "Thu": False, "Fri": False, "Sat": True, "Sun": True}
-    dataframe["public_holiday"] = list(map(lambda x: holidays_dict[x], dataframe["day_of_week"]))
-
-    return dataframe
+    return tweets
