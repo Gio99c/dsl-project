@@ -66,11 +66,9 @@ def text_mining_tfdf(tweets: pd.DataFrame, min_df=0.01) -> pd.DataFrame: #must w
     tfdf = vectorizer.fit_transform(tweets["text"])
     tweets_text_tfdf = pd.DataFrame(tfdf.toarray(), columns=vectorizer.get_feature_names())
     tweets = pd.DataFrame(np.column_stack([tweets,tweets_text_tfdf]), columns=tweets.columns.append(tweets_text_tfdf.columns)) #stack the two dataframes horizontally
-    tweets.drop(columns=["user", "text"], inplace=True) #For the moment
     return tweets
 
 def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
-
     tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
 
     sentiment = np.array(list(map(lambda x: list(SentimentIntensityAnalyzer().polarity_scores(x).values()), tqdm(tweets["text"]))))
@@ -83,6 +81,8 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     return tweets
 
 def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
+    tweets.drop(columns=["user", "text"], inplace=True) #For the moment
+
     day_of_week_dict = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6, "Sun": 7}
     months_dict = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
     
