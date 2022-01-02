@@ -13,8 +13,8 @@ from textblob import TextBlob
 from tqdm import tqdm
 import string
 import fasttext
-
 from emot.emo_unicode import EMOTICONS_EMO
+
 
 class LemmaTokenizer(object):
     def __init__(self):
@@ -27,6 +27,11 @@ class LemmaTokenizer(object):
             lemmas.append(lemma)
         return lemmas
 
+def convert_emoticons(text):
+    for emot in EMOTICONS_EMO:
+        text = re.sub(re.escape(emot), EMOTICONS_EMO[emot], text)
+    return text
+
 def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.Series) -> pd.DataFrame:
     text = np.array("__label__") + y_train.astype("str").values + np.array(" ") + X_train["text"].values
     np.savetxt("tweets.txt", text, fmt="%s")
@@ -37,8 +42,8 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd
     scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns=["embedding_negativity", "embedding_positivity"])
     scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns=["embedding_negativity", "embedding_positivity"])
 
-    X_train.drop(columns=["user", "text"], inplace=True) #For the moment
-    X_test.drop(columns=["user", "text"], inplace=True)
+    X_train.drop(columns=["text"], inplace=True)
+    X_test.drop(columns=["text"], inplace=True)
 
     X_train = pd.DataFrame(np.column_stack([X_train, scores_dev]), columns=X_train.columns.append(scores_dev.columns))
     X_test = pd.DataFrame(np.column_stack([X_test, scores_eval]), columns=X_test.columns.append(scores_eval.columns))
@@ -56,7 +61,7 @@ def load(filepath="./DSL2122_january_dataset/development.csv") -> pd.DataFrame:
     except FileNotFoundError:
         print('File not found')
 
-def cleaning(tweets: pd.DataFrame) -> pd.DataFrame:
+def extract_date(tweets: pd.DataFrame) -> pd.DataFrame:
     new_cols_date = ["day_of_week", "month_of_year", "day_of_month", "time"]
 
     tweets[new_cols_date] = tweets['date'].str.split(' ', expand=True)[[0,1,2,3]]
@@ -74,6 +79,7 @@ def cleaning(tweets: pd.DataFrame) -> pd.DataFrame:
 
     return tweets
 
+"""
 def hashtag_tfidf(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets["hashtags"] = list(map(lambda t : " ".join(re.findall("#[\d\w]+", t)), tweets["text"]))
     lemmaTokenizer = LemmaTokenizer()                                                                      
@@ -83,6 +89,7 @@ def hashtag_tfidf(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets = pd.DataFrame(np.column_stack([tweets,hashtags_tfidf]), columns=tweets.columns.append(hashtags_tfidf.columns)) #stack the two dataframes horizontally
 
     return tweets
+"""
 
 def text_mining_tfdf(tweets: pd.DataFrame, min_df=0.01) -> pd.DataFrame: #must work on this function to improve perfomance
     #tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
@@ -119,13 +126,7 @@ def preprocessing(tweets: pd.DataFrame) -> tuple([pd.DataFrame, pd.Series]):
 
     return X, y
 
-
-def convert_emoticons(text):
-    for emot in EMOTICONS_EMO:
-        text = re.sub(re.escape(emot), " ".join(EMOTICONS_EMO[emot].replace(",","").split()), text)
-    return text
-
-def replace_pattern(tweets: pd.DataFrame) -> pd.DataFrame:
+def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
     
     # regex pattern
     hashtags = "#[\d\w]+"
@@ -142,7 +143,11 @@ def replace_pattern(tweets: pd.DataFrame) -> pd.DataFrame:
 
     return tweets
 
+def add_user_text(tweets: pd.DataFrame) -> pd.DataFrame:
+    tweets["text"] = np.array("@") + tweets["user"].values + np.array(" ") + tweets["text"].values
+    tweets.drop(columns=["user"], inplace=True)
 
+    return tweets
 
 def drop_long_text(tweets: pd.DataFrame, k = int) -> pd.DataFrame:
     tweets['char_count'] = list(map(lambda x: len(x), tweets['text']))
