@@ -29,7 +29,9 @@ class LemmaTokenizer(object):
             lemmas.append(lemma)
         return lemmas
 
-def convert_emoticons(text):
+
+def convert_emoticons(text:str) -> str:
+    "Convert the emoticons in text such as ':)' by using the EMOTICONS_EMO dict"
     for emot in EMOTICONS_EMO:
         text = re.sub(re.escape(emot), EMOTICONS_EMO[emot], text)
     return text
@@ -37,17 +39,16 @@ def convert_emoticons(text):
 
 def load(filepath="./DSL2122_january_dataset/development.csv") -> pd.DataFrame:
     """Load the dataset
-
     Parameters
     ----------
     filepath: string
         filepath of the dataset to load
-
     Returns
     -------
     pd.DataFrame
         the loaded dataframe
     """
+
     try:
         return pd.read_csv(filepath, encoding='utf-8')
     except FileNotFoundError:
@@ -56,34 +57,36 @@ def load(filepath="./DSL2122_january_dataset/development.csv") -> pd.DataFrame:
 
 def extract_features(tweets: pd.DataFrame) -> pd.DataFrame:
     """Extract different features from the existsting ones
-
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
-
     Returns
     -------
     pd.DataFrame
         the same dataframe with the new features
     """
+
     new_cols_date = ["day_of_week", "month_of_year", "day_of_month", "time"]
 
     tweets[new_cols_date] = tweets['date'].str.split(' ', expand=True)[[0,1,2,3]]
     tweets["hour_of_day"] = tweets['time'].str.split(':', expand=True)[0].astype(int)
 
+    # Cast int of day of the month
+    #tweets['day_of_month']= pd.to_numeric(tweets['day_of_month'])
+
     # Drop columns that are no important 
     cols_to_drop = ["date", "time", "flag"]
     tweets.drop(columns= cols_to_drop, inplace=True)
 
-    tweets['char_count'] = list(map(lambda x: len(x), tweets['text'])) # adds char_count
+    # Extract the numb of chars in the text
+    tweets['char_count'] = list(map(lambda x: len(x), tweets['text'])) 
 
     return tweets
 
 
 def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=150) -> pd.DataFrame:
     """!! Only appliable for train set !! - Drop the duplicated tweets and (optionally) the tweets that are longer than k characters
-
     Parameters
     ----------
     tweets : pd.DataFrame
@@ -92,7 +95,6 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=150) -> pd.Dat
         Decide to drop or not the text longer than k
     k: integer
         Lenght of the tweets to be considered "long"
-
     Returns
     -------
     pd.DataFrame
@@ -108,26 +110,26 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=150) -> pd.Dat
 
 
 def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
-    """Clean the text feature from unrelevant information and convert the emoticons into text
+    """ Clean the text features by eliminating the urls and the string starting with &.
+        Moreover we apply the convert_emoticons func to the text.
 
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
-
     Returns
     -------
     pd.DataFrame
-        the same dataframe with the function applied
+        the same dataframe with the functions applied
     """
     # regex pattern
-    hashtags = "#[\d\w]+"
-    mentioned = "@[\d\w]+"
+    #hashtags = "#[\d\w]+"
+    #mentioned = "@[\d\w]+"
+
     ampersand = "&[\d\w]+"
     urls = '((www.[^s]+)|(https?://[^s]+))'
 
     pat = ampersand + "|" + urls
-    
     repl = " "
     
     tweets['text'] = tweets['text'].str.replace(pat= pat, repl = repl, regex=True)
@@ -138,7 +140,6 @@ def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
 
 def text_mining_tfdf(X_train: pd.DataFrame, X_test: pd.DataFrame, min_df=0.01) -> tuple([pd.DataFrame, pd.DataFrame]):
     """Applies the tf-df to the text feature of the train and the evaluation set
-
     Parameters
     ----------
     X_train : pd.DataFrame
@@ -147,7 +148,6 @@ def text_mining_tfdf(X_train: pd.DataFrame, X_test: pd.DataFrame, min_df=0.01) -
         Evaluation set dataframe
     min_df : float
         Minimum support for the tf-df. If is between (0, 1) is percentual, if it is >1 its absolute value is considered
-
     Returns
     -------
     tuple([pd.DataFrame, pd.DataFrame])
@@ -160,19 +160,19 @@ def text_mining_tfdf(X_train: pd.DataFrame, X_test: pd.DataFrame, min_df=0.01) -
     train_tfdf = pd.DataFrame(vectorizer.transform(X_train["text"]).toarray(), columns=vectorizer.get_feature_names())
     test_tfdf = pd.DataFrame(vectorizer.transform(X_test["text"]).toarray(), columns=vectorizer.get_feature_names())
 
+    # we can use pd.concat it immediately cast to dataframe
     X_train = pd.DataFrame(np.column_stack([X_train,train_tfdf]), columns=X_train.columns.append(train_tfdf.columns)) #stack the two dataframes horizontally
     X_test = pd.DataFrame(np.column_stack([X_test,test_tfdf]), columns=X_test.columns.append(test_tfdf.columns))
+
     return X_train, X_test
 
 
 def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     """Extract the sentiment from the text feature
-
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
-
     Returns
     -------
     pd.DataFrame
@@ -190,17 +190,15 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     return tweets
 
 def add_user_text(tweets: pd.DataFrame) -> pd.DataFrame:
-    """Add the user feature as the first word (with the @) in the text feature
-
+    """Add the username as the first word (with the @) in the text feature
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
-
     Returns
     -------
     pd.DataFrame
-        the same dataframe with the function applied
+        Same dataframe with the function applied
     """
     tweets["text"] = np.array("@") + tweets["user"].values + np.array(" ") + tweets["text"].values
     tweets.drop(columns=["user"], inplace=True)
@@ -209,8 +207,7 @@ def add_user_text(tweets: pd.DataFrame) -> pd.DataFrame:
     
 
 def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFrame, pd.DataFrame]):
-    """Add the word embeddings scores to the development and evaluation set, based on the vocabolury of the training set
-
+    """Add the word embeddings scores to the development and evaluation set, based on the vocabolury of the training set.
     Parameters
     ----------
     X_train : pd.DataFrame
@@ -222,7 +219,10 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
     tuple([pd.DataFrame, pd.DataFrame, pd.Series])
         a tuple with X_train, X_test and y_train
     """
-    X_valid_train, X_valid_test, y_valid_train, y_valid_test = train_test_split(X_train, X_train["sentiment"], test_size=0.2, stratify=X_train["sentiment"], random_state=42)
+    print('Sto facendo autovalidation')
+    
+    
+    X_valid_train, X_valid_test, y_valid_train, y_valid_test = train_test_split(X_train, X_train["sentiment"], test_size=0.2, stratify= X_train["sentiment"], random_state=42)
     text_train = np.array("__label__") + X_valid_train["sentiment"].astype("str").values + np.array(" ") + X_valid_train["text"].values
     text_valid = np.array("__label__") + X_valid_test["sentiment"].astype("str").values + np.array(" ") + X_valid_test["text"].values
     np.savetxt("train.txt", text_train, fmt="%s")
@@ -234,7 +234,7 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
     #lo so, questa cosa è poco leggibile, la migliorerò
     scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns=["embedding_negativity", "embedding_positivity"])
     scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns=["embedding_negativity", "embedding_positivity"])
-
+    
     X_train = pd.DataFrame(np.column_stack([X_train, scores_dev]), columns=X_train.columns.append(scores_dev.columns))
     X_test = pd.DataFrame(np.column_stack([X_test, scores_eval]), columns=X_test.columns.append(scores_eval.columns))
 
@@ -242,12 +242,10 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
 
 def convert_categorical(tweets: pd.DataFrame) -> pd.DataFrame:
     """Converts the features that are not categorical
-
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
-
     Returns
     -------
     pd.DataFrame
@@ -265,16 +263,16 @@ def convert_categorical(tweets: pd.DataFrame) -> pd.DataFrame:
 
     return tweets
 
+    
+
 def normalize(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFrame, pd.DataFrame, pd.Series]):
     """Applies a MinMaxScaler to all the features of the dataframes and pops y_train from X_train
-
     Parameters
     ----------
     X_train : pd.DataFrame
         Devolopment set dataframe
     X_test : pd.DataFrame
         Evaluation set dataframe
-
     Returns
     -------
     tuple([pd.DataFrame, pd.DataFrame, pd.Series])
@@ -288,13 +286,12 @@ def normalize(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFram
 
     return X_train, X_test, y_train
 
-def save_results(y_pred: list):
+def save_results(y_pred: list, fp: str):
     """Saves the prediction of the classification model in the sample_submission.csv file
-
     Parameters
     ----------
     y_pred : list
         The list of predictions made by the classifier
     """
 
-    pd.Series(y_pred, name="Predicted").to_csv("./DSL2122_january_dataset/sample_submission.csv", index_label="Id")
+    pd.Series(y_pred, name="Predicted").to_csv(fp, index_label="Id")
