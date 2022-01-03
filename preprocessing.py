@@ -2,7 +2,9 @@ from os import device_encoding, remove
 import numpy as np
 import pandas as pd
 import regex as re
+from scipy.sparse.construct import rand
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from nltk.tokenize import word_tokenize
@@ -207,10 +209,27 @@ def add_user_text(tweets: pd.DataFrame) -> pd.DataFrame:
     
 
 def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFrame, pd.DataFrame]):
-    text = np.array("__label__") + X_train["sentiment"].astype("str").values + np.array(" ") + X_train["text"].values
-    np.savetxt("tweets.txt", text, fmt="%s")
-    model = fasttext.train_supervised("tweets.txt")
-    remove("tweets.txt")
+    """Add the word embeddings scores to the development and evaluation set, based on the vocabolury of the training set
+
+    Parameters
+    ----------
+    X_train : pd.DataFrame
+        Devolopment set dataframe
+    X_test : pd.DataFrame
+        Evaluation set dataframe
+    Returns
+    -------
+    tuple([pd.DataFrame, pd.DataFrame, pd.Series])
+        a tuple with X_train, X_test and y_train
+    """
+    X_valid_train, X_valid_test, y_valid_train, y_valid_test = train_test_split(X_train, X_train["sentiment"], test_size=0.2, stratify=X_train["sentiment"], random_state=42)
+    text_train = np.array("__label__") + X_valid_train["sentiment"].astype("str").values + np.array(" ") + X_valid_train["text"].values
+    text_valid = np.array("__label__") + X_valid_test["sentiment"].astype("str").values + np.array(" ") + X_valid_test["text"].values
+    np.savetxt("train.txt", text_train, fmt="%s")
+    np.savetxt("valid.txt", text_train, fmt="%s")
+    model = fasttext.train_supervised("train.txt", autotuneValidationFile="valid.txt")
+    remove("train.txt")
+    remove("valid.txt")
 
     #lo so, questa cosa è poco leggibile, la migliorerò
     scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns=["embedding_negativity", "embedding_positivity"])
