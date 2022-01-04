@@ -102,7 +102,7 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.Dat
         the same dataframe with the function applied
     """
     tweets.drop_duplicates(subset=['text', 'sentiment'], keep='first', inplace=True)
-    tweets.drop_duplicates(subset=['text'], inplace=True)
+    tweets.drop_duplicates(subset=['text'], inplace=True, keep=False)
 
     if drop_long_text:
         tweets = tweets.loc[tweets['char_count'] <= k]
