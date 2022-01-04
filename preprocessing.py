@@ -16,6 +16,7 @@ from tqdm import tqdm
 import string
 import fasttext
 from emot.emo_unicode import EMOTICONS_EMO
+import html
 
 
 class LemmaTokenizer(object):
@@ -85,7 +86,7 @@ def extract_features(tweets: pd.DataFrame) -> pd.DataFrame:
     return tweets
 
 
-def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=150) -> pd.DataFrame:
+def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.DataFrame:
     """!! Only appliable for train set !! - Drop the duplicated tweets and (optionally) the tweets that are longer than k characters
     Parameters
     ----------
@@ -104,35 +105,32 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=150) -> pd.Dat
     tweets.drop_duplicates(subset=['text'], inplace=True)
 
     if drop_long_text:
-        tweets = tweets.loc[tweets['char_count'] < k]
+        tweets = tweets.loc[tweets['char_count'] <= k]
 
     return tweets
 
 
 def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
-    """ Clean the text features by eliminating the urls and the string starting with &.
-        Moreover we apply the convert_emoticons func to the text.
+    """Clean the text feature from unrelevant information and convert the emoticons into text
 
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
+
     Returns
     -------
     pd.DataFrame
-        the same dataframe with the functions applied
+        the same dataframe with the function applied
     """
-    # regex pattern
-    #hashtags = "#[\d\w]+"
-    #mentioned = "@[\d\w]+"
+    # Convert HTML entities into characters
+    tweets["text"] = tweets["text"].apply(lambda x : html.unescape(x))
 
-    ampersand = "&[\d\w]+"
-    urls = '((www.[^s]+)|(https?://[^s]+))'
+    # regex pattern for the site domain extraction
+    urls = "(www\.)|(https?:\/\/)|(\.((com)|(ly)|(it)|(to)|(fm)|(co)|(me)|(gov)|(net)|(org)|(uk)|(im)|(gd)|(cc))[\/\w\d-~_\.]*)"
+    tweets['text'] = tweets['text'].str.replace(pat=urls, repl="", regex=True)
 
-    pat = ampersand + "|" + urls
-    repl = " "
-    
-    tweets['text'] = tweets['text'].str.replace(pat= pat, repl = repl, regex=True)
+    # convert emoticons into text
     tweets['text'].apply(lambda x: convert_emoticons(x))
 
     return tweets
