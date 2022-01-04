@@ -127,7 +127,7 @@ def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets["text"] = tweets["text"].apply(lambda x : html.unescape(x))
 
     # regex pattern for the site domain extraction
-    urls = "(www\.)|(https?:\/\/)|(\.((com)|(ly)|(it)|(to)|(fm)|(co)|(me)|(gov)|(net)|(org)|(uk)|(im)|(gd)|(cc))[\/\w\d-~_\.]*)"
+    urls = "(www\.)|(https?:\/\/)|(\.((com)|(ly)|(it)|(to)|(fm)|(co)|(me)|(gov)|(net)|(org)|(uk)|(im)|(gd)|(cc))[\/\w\d\-\~_\.]*)"
     tweets['text'] = tweets['text'].str.replace(pat=urls, repl="", regex=True)
 
     # convert emoticons into text
