@@ -107,8 +107,11 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.Dat
     pd.DataFrame
         the same dataframe with the function applied
     """
-    tweets.drop_duplicates(subset=['text', 'sentiment'], keep='first', inplace=True)
-    tweets.drop_duplicates(subset=['text'], inplace=True, keep=False)
+    # drop the copies tweet of the same user, keep only the first
+    tweets.drop_duplicates(subset=['text', "sentiment", "user"], inplace=True, keep="first") 
+
+    # drop all the tweets with the same text but diffent sentiment
+    tweets = tweets[~(tweets.duplicated(subset="text") & ~tweets.duplicated(subset=["text", "sentiment"]))]
 
     if drop_long_text:
         tweets = tweets.loc[tweets['char_count'] <= k]
