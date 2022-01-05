@@ -1,3 +1,4 @@
+from io import TextIOWrapper
 from os import device_encoding, remove
 import numpy as np
 import pandas as pd
@@ -17,6 +18,8 @@ import string
 import fasttext
 from emot.emo_unicode import EMOTICONS_EMO
 import html
+import tldextract
+
 
 
 class LemmaTokenizer(object):
@@ -30,6 +33,9 @@ class LemmaTokenizer(object):
             lemmas.append(lemma)
         return lemmas
 
+def word_lemmatizer(text):
+    lem_text = [WordNetLemmatizer().lemmatize(i.strip()) for i in text]
+    return lem_text
 
 def convert_emoticons(text:str) -> str:
     "Convert the emoticons in text such as ':)' by using the EMOTICONS_EMO dict"
@@ -110,13 +116,15 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.Dat
     return tweets
 
 
-def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
+def clean_text(tweets: pd.DataFrame, deep_clean=False) -> pd.DataFrame:
     """Clean the text feature from unrelevant information and convert the emoticons into text
 
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
+    deep_clean: boo
+        if True performs a deeper cleaning by removing number, hashtags and mentioned users. Default False
 
     Returns
     -------
@@ -126,12 +134,25 @@ def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
     # Convert HTML entities into characters
     tweets["text"] = tweets["text"].apply(lambda x : html.unescape(x))
 
-    # regex pattern for the site domain extraction
-    urls = "(www\.)|(https?:\/\/)|(\.((com)|(ly)|(it)|(to)|(fm)|(co)|(me)|(gov)|(net)|(org)|(uk)|(im)|(gd)|(cc))[\/\w\d\-\~_\.]*)"
-    tweets['text'] = tweets['text'].str.replace(pat=urls, repl="", regex=True)
+    # Convert the text in lower case
+    tweets["text"] = tweets["text"].str.lower()
+
+    # extract the domain from the urls
+    #urls = "(www\.)|(https?:\/\/)|(\.((com)|(ly)|(it)|(to)|(fm)|(co)|(me)|(gov)|(net)|(org)|(uk)|(im)|(gd)|(cc))[\/\w\d\-\~_\.]*)"
+    tweets["text"] = tweets['text'].str.replace(pat="((https?:\/\/)?([w]+\.)?\S+)", repl=lambda x: tldextract.extract(x.group(1)).domain, regex=True)
 
     # convert emoticons into text
     tweets['text'].apply(lambda x: convert_emoticons(x))
+
+    if deep_clean:
+        # remove hashtags and mentioned users
+        tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@|#[A-Za-z0-9]+)|([^0-9A-Za-z \t])", "", x))  
+
+        # remove numbers
+        tweets["text"] = tweets["text"].apply(lambda elem: re.sub(r"\d+", "", elem))
+
+    # Lemmatize text
+    tweets["text"] = tweets["text"].apply(lambda x: " ".join(word_lemmatizer(x.split())))
 
     return tweets
 
