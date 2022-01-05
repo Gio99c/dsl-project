@@ -65,16 +65,7 @@ Although the \textit{date} attribute could hide some useful insights about the s
     \item A \textbf{tf-df}\cite{} of the text in order to get the words that mainly influence the sentiments of the tweets.
     \item A \textbf{word embedding}\cite{} approach with the FastText\cite{} library to retrieve the morphological relationships between the words in a sentence.
 \end{itemize}
-Figure \ref{fig:text_mining} shows a summary of our approach.
-The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with an f1-score\cite{f1} higher than 0.8. This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification to our dataset. 
-
-Finally, we wanted to add the \textit{user} attribute into the equation. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is probable that a sentiment is predominant with respect to the other one. We did not want to encode the information of each user because of the subsequent dimensionality increase of the the dataset with an approach like the One-Hot-Encoding\cite{ohe}. \textbf{***to rephrase}
-So we chose to incorporate the user author of the post at the beginning of the text of the tweet. The text already contains mentioned user whose name is preceded by an at-sign (@). In this way, the word embedding classification will retrieve information about the author of the post like if he was mentioned within it.
-
-Sections \ref{sec:preprocessing} and \ref{sec:model} will dig into the details of the three different text mining techniques and some comments about the word embedding can be found in the Discussion section \ref{sec:discussion} of the paper.
-
-\subsection{Preprocessing}\label{sec:preprocessing}
-
+Figure \ref{fig:text_mining}
 \subsection{Model selection}\label{sec:model}
 \subsection{Hyperparameters tuning}\label{sec:hypertuning}
 
