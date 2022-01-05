@@ -1,0 +1,16 @@
+\begin{thebibliography}{1}
+
+\bibitem{iso8601}
+ISO{~}8601-1:2019, {\em Part 1: Basic Rules: Date and time -- Representations
+  for information interchange}.
+\newblock ISO, Geneva, Switzerland.
+
+\bibitem{tweet_lenght}
+K.~Gligorić, A.~Anderson, and R.~West, ``Adoption of twitter's new length
+  limit: Is 280 the new 140?,'' 2020.
+
+\bibitem{ohe}
+D.~Harris and S.~Harris, {\em Digital Design and Computer Architecture}.
+\newblock Engineering professional collection, Elsevier Science, 2013.
+
+\end{thebibliography}
