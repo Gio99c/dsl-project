@@ -43,7 +43,7 @@ The objective of the competition was to build a model that is able to classify w
     \item A \textbf{development} set composed by 224,994 records of tweets. Each sample has six different features, including the \textit{sentiment} attribute that is the target the classification.
     \item A \textbf{evaluation} set consisting of 74,999 samples. Its dimension is one-third of the development set and it does not feature the target variable.
 \end{itemize}
-The dataset is quite large, so the time required to manage the operations on the data should be taken into account because it could be not trivial. It is essential to retrieve some meaningful information of the data by exploiting its features. In particular, every sample is characterized by:
+\textbf{***move}The dataset is quite large, so the time required to manage the operations on the data should be taken into account because it could be not trivial. It is essential to retrieve some meaningful information of the data by exploiting its features. In particular, every sample is characterized by:
 \begin{itemize}
     \item \textit{ids}: the unique identifier of the tweet. It is represented by a progressive integer number that is related to the timestamp of the tweet. The lowest value of the \textit{ids} attribute is 1,467,811,193 while the highest is 2,329,205,038. It is uncertain if the dataset includes only a subset of the actual number of posted tweets or if the increase of the values follows some pattern. In fact, by digging in the past twitter documentation, we found out that the tweet id is generated with a snowflake schema, invented by Twitter for the generation of sequential ids for their tweets.
     \item \textit{date}: the timestamp of each tweet. The date is encoded as a string not in the ISO 8601 standard\cite{iso8601} but with the format:
@@ -57,7 +57,7 @@ The dataset is quite large, so the time required to manage the operations on the
 In the \ref{sec:approach} we will assess what are the most relevant features to carry on the classification and how we will extract the relevant information that lies within each feature.
 
 \section{Proposed approach}\label{sec:approach}
-The dataset does not feature any missing value, but it contains redundant information that is useless for the analysis. We decided to extract the time-related information from the \textit{date} attribute. In this manner, we added new features to the dataset and also some aggregated measures like the time of the day (morning, afternoon, night) and the time of the time (workday, weekend) during which the tweet was posted. At this stage was still unknown whether all this attributes extracted from the \textit{date} variable would have been useful or not. That is because the \textit{ids} feature is not useless, but it already encodes the timestamp of the tweet. Nonetheless, we decided to leave those features and figure out later if their relative importance would matter.
+\textbf{***Move in overview maybe with a table}The dataset does not feature any missing value, but it contains redundant information that is useless for the analysis. We decided to extract the time-related information from the \textit{date} attribute. In this manner, we added new features to the dataset and also some aggregated measures like the time of the day (morning, afternoon, night) and the time of the time (workday, weekend) during which the tweet was posted. At this stage was still unknown whether all this attributes extracted from the \textit{date} variable would have been useful or not. That is because the \textit{ids} feature is not useless, but it already encodes the timestamp of the tweet. Nonetheless, we decided to leave those features and figure out later if their relative importance would matter.
 
 Although the \textit{date} attribute could hide some useful insights about the sentiment of the tweet, the major knowledge lies within the \textit{text} attribute. The information extraction from this feature can be performed in different ways and with different processes. We decided to tackle the problem from different points of view and we managed to embed all this data into our model. Firstly, we cleaned up and fix some problems present in the tweets' text, then we exploited the text performing:
 \begin{itemize}
@@ -74,6 +74,7 @@ So we chose to incorporate the user author of the post at the beginning of the t
 Sections \ref{sec:preprocessing} and \ref{sec:model} will dig into the details of the three different text mining techniques and some comments about the word embedding can be found in the Discussion section \ref{sec:discussion} of the paper.
 
 \subsection{Preprocessing}\label{sec:preprocessing}
+
 \subsection{Model selection}\label{sec:model}
 \subsection{Hyperparameters tuning}\label{sec:hypertuning}
 
