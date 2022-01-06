@@ -73,7 +73,7 @@ In the \ref{sec:approach} we will assess what are the most relevant features to 
 
 Although the \textit{date} attribute could hide some useful insights about the sentiment of the tweet, the major knowledge lies within the \textit{text} attribute. The information extraction from this feature can be performed in different ways and with different processes. We decided to tackle the problem from different points of view and we managed to embed all this data into our model. Firstly, we cleaned up and fix some problems present in the tweets' text, then we exploited the text performing:
 \begin{itemize}
-    \item A \textbf{sentiment intensity analysis}\cite{} on the text, obtaining new features on the polarization of the sentiments.
+    \item A \textbf{sentiment intensity analysis}\cite{sentiment_analysis} on the text, obtaining new features on the polarization of the sentiments.
     \item A \textbf{tf-df}\cite{} of the text in order to get the words that mainly influence the sentiments of the tweets.
     \item A \textbf{word embedding}\cite{} approach with the FastText\cite{fasttext} library to retrieve the morphological relationships between the words in a sentence.
 \end{itemize}
