@@ -1,13 +1,13 @@
 import numpy as np
+import pandas as pd
 
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier, AdaBoostClassifier
+
 from sklearn.neural_network import MLPClassifier
 
-from preprocessing import create_hours_bins
 
 
 bool_par = [True, False]
@@ -39,21 +39,37 @@ parameters_support_vector ={
     "gamma":['scale', 'auto'] 
     }
 
-# NAIVE BAYES
 
-parameters_naive_bayesian = {
 
-    "priors": [np.array([x, 1-x]) for x in np.arange(0.01, 1, 0.02)], # Array prior probabilty 
-    "var_smoothing": np.logspace(0.-12, num=150)
+
+parameters_HGBC ={
+    "loss": ["auto", "binary_crossentropy", "categorical_crossentropy"],
+    "learning_rate": np.arange(start=0.1, stop=1, step=0.1),
+    "max_iter": np.arange(start=100, stop= 1000, step= 100),
+    "max_leaf_nodes": [20,25,30,35,50,None],
+    "min_samples_leaf":[10, 20, 40],
+    "l2_regularization" : np.arange(start=0, stop=1, step=0.1),
+    "warm_start": [True, False]
 
 }
 
-# MULTI LAYER NEURAL NETWORK 
-
-parameters_multi_layer_nn = {
-
+parameters_ada ={
+    "base_estimator": [RandomForestClassifier(), DecisionTreeClassifier(), HistGradientBoostingClassifier()],
+    "n_estimators": np.arange(start=100, stop= 1000, step= 100),
+    "learning_rate": np.arange(start=1, stop=2, step=0.1),
+    "algorithm":["SAMME", "SAMME.R"]
 }
 
 
-x = np.arange(0.01, 1, 0.02)
-print(x)
+
+
+def test_classifier(clf, X_train : pd.DataFrame, X_test : pd.DataFrame, y_train: pd.Series, file_name: str) -> None:
+
+    print(f'Start Training with {clf}')
+    clf.fit(X_train,y_train)
+    print(f'Finish Training with {clf}')
+
+    y_pred = clf.predict(X_test)
+
+    pd.Series(y_pred, name="Predicted").to_csv(file_name, index_label="Id")
+    print(f"File Salvato con questo nome: {file_name}!\n\n\n")
