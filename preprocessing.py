@@ -20,19 +20,6 @@ from emot.emo_unicode import EMOTICONS_EMO
 import html
 import tldextract
 
-
-
-class LemmaTokenizer(object):
-    def __init__(self):
-        self.lemmatizer = WordNetLemmatizer()
-    def __call__(self, document):
-        lemmas = []
-        for t in word_tokenize(document):
-            t = t.strip()
-            lemma = self.lemmatizer.lemmatize(t)
-            lemmas.append(lemma)
-        return lemmas
-
 def word_lemmatizer(text):
     lem_text = [WordNetLemmatizer().lemmatize(i.strip()) for i in text]
     return lem_text
@@ -175,9 +162,8 @@ def text_mining_tfdf(X_train: pd.DataFrame, X_test: pd.DataFrame, min_df=0.01) -
     tuple([pd.DataFrame, pd.DataFrame])
         A tuple with X_train and X_test with the tf-df applied
     """
-    #tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
-    lemmaTokenizer = LemmaTokenizer()                                                                      
-    vectorizer = TfidfVectorizer(tokenizer=lemmaTokenizer, stop_words=sw.words('english'), strip_accents="ascii", use_idf=False, min_df=min_df)
+    #tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)                                                                     
+    vectorizer = TfidfVectorizer(strip_accents="ascii", use_idf=False, min_df=min_df)
     vectorizer.fit(X_train["text"])
     train_tfdf = pd.DataFrame(vectorizer.transform(X_train["text"]).toarray(), columns=vectorizer.get_feature_names())
     test_tfdf = pd.DataFrame(vectorizer.transform(X_test["text"]).toarray(), columns=vectorizer.get_feature_names())
