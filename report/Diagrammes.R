@@ -8,13 +8,13 @@ digraph neato {
 
 graph [layout = neato]
 
-node [shape = circle, fixedsize = true, width=0.7, peripheries=2, penwidth= 0.1, fontsize=10]
-a [label = 'text']
+node [shape = circle, fixedsize = true, width=0.7, peripheries=2, penwidth= 0.5, fontsize=10]
+a [label = 'Text']
 
-node [shape = square, style=filled, fillcolor=grey, peripheries=1]
-b [label = 'tf-df'] 
-c [label = 'sentiment']
-d [label = 'word\nembedding']
+node [shape = square, style=filled, fillcolor='#80b1d3', peripheries=1]
+b [label = 'TF-DF'] 
+c [label = 'Sentiment']
+d [label = 'Word\nEmbedding']
 
 node [shape = circle, style = filled, fillcolor = white, peripheries=1]
 e [label = 'neg']
@@ -22,7 +22,7 @@ f [label = 'neu']
 g [label = 'pos']
 h [label = 'compound']
 i [label = 'polarity']
-j [label = 'relevant\nwords\n...']
+j [label = 'relevant\nwords']
 k [label = 'positivity\nlikelihood']
 l [label = 'negativity\nlikelihood']
 
@@ -46,13 +46,13 @@ overall_schema <- grViz('digraph ninja{
   edge [color = grey50, arrowtail = none]
   
   struct1 [
-    label = "Twitter Dataset|<port1>ids|<port2>date|flag|<port3>text|<port4>user|<port5>sentiment";
+    label = "Twitter Dataset|<port1>IDs|<port2>Date|Flag|<port3>Text|<port4>User|<port5>Sentiment";
     shape=record
     fixedsize = false
     height=7.6
     fontsize=25
   ];
-  struct1:port1 [style=filled, fillcolor=grey95]
+  struct1:port1 [style=filled, fillcolor=lightyellow]
   struct1:port1 -> g
   struct1:port2 -> b
   struct1:port3 -> c
@@ -73,11 +73,11 @@ overall_schema <- grViz('digraph ninja{
   d [label="Word\nEmbedding", peripheries=2]
   e [label="TF-DF", peripheries=2]
   f [label="Sentiment\nAnalysis", peripheries=2]
-  g [label="Numerical\nValue", peripheries=1, style="filled", fillcolor= lightyellow]
-  h [label="Discrete\nValue", peripheries=1, style="filled", fillcolor= lightyellow]
-  i [label="Weighted\nMatrix", peripheries=1, style="filled", fillcolor= lightyellow]
-  j [label="Sentiment\nFeatures", peripheries=1, style="filled", fillcolor= lightyellow]
-  k [label="Likelihood\nFeatures", peripheries=1, style="filled", fillcolor= lightyellow]
+  g [label="Numerical\nValue", peripheries=1, style="filled", fillcolor= "#fdb462"]
+  h [label="Discrete\nValue", peripheries=1, style="filled", fillcolor= "#fdb462"]
+  i [label="Weighted\nMatrix", peripheries=1, style="filled", fillcolor= "#fdb462"]
+  j [label="Sentiment\nFeatures", peripheries=1, style="filled", fillcolor= "#fdb462"]
+  k [label="Likelihood\nFeatures", peripheries=1, style="filled", fillcolor= "#fdb462"]
   }')
 
 overall_schema %>%
