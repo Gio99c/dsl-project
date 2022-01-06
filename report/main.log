@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.27)  5 JAN 2022 17:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.27)  6 JAN 2022 13:25
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -762,25 +762,14 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 43.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 2941) in paragraph at lines 52--53
-[]\OT1/ptm/m/it/10 flag\OT1/ptm/m/n/10 : a string whose sig-nif-i-cance is un-s
-ure. It is
- []
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 52.
 
-Package svg Info: Calling Inkscape on input line 59.
-runsystem(inkscape -z -D --export-latex  --file="./figures/charcount.svg" --exp
-ort-pdf="charcount_svg-tex.pdf" )...executed.
-
-runsystem(mkdir -p "./svg-inkscape/")...executed.
-
-runsystem(mv "charcount_svg-tex.pdf" "./svg-inkscape/charcount_svg-tex.pdf")...
-executed.
-
-runsystem(mv "charcount_svg-tex.pdf_tex" "./svg-inkscape/charcount_svg-tex.pdf_
-tex")...executed.
-
+(/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
 Package svg Info: Last page of `./svg-inkscape/charcount_svg-tex.pdf' is 1 on i
 nput line 59.
+
 (./svg-inkscape/charcount_svg-tex.pdf_tex
 <./svg-inkscape/charcount_svg-tex.pdf, id=41, page=1, 736.50616pt x 433.62pt>
 File: ./svg-inkscape/charcount_svg-tex.pdf Graphic file (type pdf)
@@ -807,159 +796,145 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
  <./svg-inkscape/charcount_svg-tex.pdf>]
-./main.tex:82: Undefined control sequence.
-<argument> \columnwith 
-                       
-l.82 ...    \includesvg[width=\columnwith]{schema}
-                                                  
-? 
 
-./main.tex:82: Package scrbase Error: unknown option `width=\columnwith '.
+LaTeX Warning: Citation `fasttext' on page 2 undefined on input line 78.
 
-See the scrbase package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.82 ...    \includesvg[width=\columnwith]{schema}
-                                                  
-? 
 Package svg Info: Last page of `./svg-inkscape/schema_svg-tex.pdf' is 17 on inp
 ut line 82.
 (./svg-inkscape/schema_svg-tex.pdf_tex
-<./svg-inkscape/schema_svg-tex.pdf, id=130, page=1, 437.38406pt x 226.59656pt>
+<./svg-inkscape/schema_svg-tex.pdf, id=131, page=1, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page1 used on inpu
 t line 56.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=131, page=2, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=132, page=2, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 2>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page2 used on inpu
 t line 58.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=132, page=3, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=133, page=3, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 3>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page3 used on inpu
 t line 60.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=133, page=4, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=134, page=4, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 4>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page4 used on inpu
 t line 62.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=134, page=5, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=135, page=5, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 5>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page5 used on inpu
 t line 64.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=135, page=6, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=136, page=6, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 6>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page6 used on inpu
 t line 66.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=136, page=7, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=137, page=7, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 7>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page7 used on inpu
 t line 68.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=137, page=8, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=138, page=8, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 8>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page8 used on inpu
 t line 70.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=138, page=9, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=139, page=9, 437.38406pt x 226.59656pt>
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 9>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page9 used on inpu
 t line 72.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=139, page=10, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=140, page=10, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 10>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page10 used on inp
 ut line 74.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=140, page=11, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=141, page=11, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 11>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page11 used on inp
 ut line 76.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=141, page=12, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=142, page=12, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 12>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page12 used on inp
 ut line 78.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=142, page=13, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=143, page=13, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 13>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page13 used on inp
 ut line 80.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=143, page=14, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=144, page=14, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 14>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page14 used on inp
 ut line 82.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=144, page=15, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=145, page=15, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 15>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page15 used on inp
 ut line 84.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=145, page=16, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=146, page=16, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 16>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page16 used on inp
 ut line 86.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
-<./svg-inkscape/schema_svg-tex.pdf, id=146, page=17, 437.38406pt x 226.59656pt>
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
+<./svg-inkscape/schema_svg-tex.pdf, id=147, page=17, 437.38406pt x 226.59656pt>
 
 File: ./svg-inkscape/schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/schema_svg-tex.pdf, page 17>
 Package pdftex.def Info: ./svg-inkscape/schema_svg-tex.pdf , page17 used on inp
 ut line 88.
-(pdftex.def)             Requested size: 437.38405pt x 226.59944pt.
+(pdftex.def)             Requested size: 252.0pt x 130.55478pt.
 )
-Overfull \hbox (185.38405pt too wide) in paragraph at lines 82--83
- [][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
 
 LaTeX Warning: Citation `f1' on page 2 undefined on input line 87.
 
-(./main.bbl)
 
-** Conference Paper **
-Before submitting the final camera ready copy, remember to:
+LaTeX Warning: Citation `utf8' on page 2 undefined on input line 105.
 
- 1. Manually equalize the lengths of two columns on the last page
- of your paper;
 
- 2. Ensure that any PostScript and/or PDF output post-processing
- uses only Type 1 fonts and that every step in the generation
- process uses the appropriate paper size.
+LaTeX Warning: Citation `html_entities' on page 2 undefined on input line 105.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 108.
+
+LaTeX Warning: Citation `lemmatization' on page 2 undefined on input line 105.
+
+
+LaTeX Warning: Citation `stemming' on page 2 undefined on input line 105.
+
+
+LaTeX Warning: Citation `stemmingVSlemmatizing' on page 2 undefined on input li
+ne 105.
+
+
+LaTeX Warning: Reference `fig:cleaning' on page 2 undefined on input line 106.
+
 [2 <./svg-inkscape/unbalanced_svg-tex.pdf> <./svg-inkscape/schema_svg-tex.pdf
 
 pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/schema_svg-te
@@ -1029,37 +1004,67 @@ x.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/schema_svg-te
 x.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 >]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 108.
+
+LaTeX Warning: Citation `nlkt' on page 3 undefined on input line 108.
+
+
+LaTeX Warning: Citation `vader' on page 3 undefined on input line 108.
+
+
+LaTeX Warning: Citation `textblob' on page 3 undefined on input line 108.
+
+
+LaTeX Warning: Citation `minmax' on page 3 undefined on input line 114.
+
+(./main.bbl)
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 128.
+[3]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 128.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 108.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 108.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 128.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 128.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D3FD07447EB4400EC5BCF6FA9A59253F;433.
 
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 10992 strings out of 492616
- 173137 string characters out of 6129481
- 312584 words of memory out of 5000000
- 14718 multiletter control sequences out of 15000+600000
- 36949 words of font info for 72 fonts, out of 8000000 for 9000
+ 11066 strings out of 492616
+ 174029 string characters out of 6129481
+ 314584 words of memory out of 5000000
+ 14772 multiletter control sequences out of 15000+600000
+ 44334 words of font info for 90 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,14n,54p,851b,509s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,14n,54p,1220b,513s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
 xlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
 ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
-e/2019/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/tex
-mf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2019/texmf-dist/f
-onts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1
-/urw/times/utmri8a.pfb>
-Output written on main.pdf (2 pages, 147594 bytes).
+e/2019/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/
+fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/typ
+e1/urw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/tim
+es/utmri8a.pfb>
+Output written on main.pdf (3 pages, 159517 bytes).
 PDF statistics:
- 225 PDF objects out of 1000 (max. 8388607)
- 157 compressed objects within 2 object streams
- 17 named destinations out of 1000 (max. 500000)
+ 240 PDF objects out of 1000 (max. 8388607)
+ 170 compressed objects within 2 object streams
+ 22 named destinations out of 1000 (max. 500000)
  175 words of extra memory for PDF output out of 10000 (max. 10000000)
 
