@@ -79,11 +79,11 @@ Although the \textit{date} attribute could hide some useful insights about the s
 \end{itemize}
 \begin{figure}[h]
         \centering
-        \includesvg[width=\columnwidth]{schema}
+        \includesvg[width=\columnwidth]{overall_schema}
         \caption{Overall schema of the problem approach}
-        \label{fig:schema}
+        \label{fig:overall_schema}
 \end{figure}
-Figure \ref{fig:schema} shows a summary of our approach.
+Figure \ref{fig:overall_schema} shows a summary of our approach.
 The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with an f1-score\cite{f1} higher than 0.8. This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification into our dataset. 
 
 Finally, we wanted to add the \textit{user} attribute into the equation. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is probable that a sentiment is predominant to the other one. We did not want to encode the information of each user because of the subsequent dimensionality increase of the dataset with an approach like the One-Hot-Encoding\cite{ohe}. \textbf{***to rephrase}
@@ -110,6 +110,13 @@ At this stage, the \textit{text} feature is ready to be processed. We heavily re
 Going forward, we applied a tf-df to the text word with a relative high minimum support. Our aim was to retrieve the words that were present in a lot of tweets and which meaning was heavily polarized toward one class. In this case, we did not use a normal stop words vocabulary, because there are a lot of common term that are very important for the classification, like the negations. So we created a custom vocabulary that contained only conjunctions and some adverbs.
 
 Finally, we leveraged the word embedding approach through Meta's FastText library. The vocabulary was built on top of the tweets of the development set. The autotuning feature of the library allowed us to treat the neural network underneath the facade as a black box. We split the development data into training and validation and the model tuned itself by maximizing the resulting f1-score. One of the strenghts of this technique is that by converting the words into multi-dimensional vectors it does not suffer the presence of unfamiliar terms. The output of the neural network is a prediction and the softmax likelihood for each class. We extracted these probabilities and we integrated them into the dataset.
+\begin{figure}[h]
+        \centering
+        \includesvg[width=\columnwidth]{text_schema}
+        \caption{Feature extraction schema of \textit{text} attribute}
+        \label{fig:text_schema}
+\end{figure}
+Figure \ref{fig:text_schema} summarises the operations perfomed on the \textit{text} attribute.
 
 The data is not yet ready to be processed by a classification algorithm. The categorical needs to be addressed. We removed the \textit{text} and the \textit{user} features because we have already extracted the information needed and then we proceed to map the remaining features into numerical ones. All the columns are normalized with a MinMax scaler\cite{minmax} and it is ready to go through the model selection pipeline.
 \subsection{Model selection}\label{sec:model}
