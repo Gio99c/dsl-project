@@ -161,22 +161,23 @@ def clean_text(tweets: pd.DataFrame, deep_clean=False) -> pd.DataFrame:
     tweets["text"] = tweets["text"].str.lower()
 
     # extract the domain from the urls
-    #urls = "(www\.)|(https?:\/\/)|(\.((com)|(ly)|(it)|(to)|(fm)|(co)|(me)|(gov)|(net)|(org)|(uk)|(im)|(gd)|(cc))[\/\w\d\-\~_\.]*)"
     tweets["text"] = tweets['text'].str.replace(pat="((https?:\/\/)?([w]+\.)?\S+)", repl=lambda x: tldextract.extract(x.group(1)).domain, regex=True)
+
+    # removes duplicated letters
+    tweets["text"] = tweets["text"].apply(lambda x: re.sub("(\w)\\1{2,}", "\\1\\1", x))
+
+    # remove numbers
+    tweets["text"] = tweets["text"].apply(lambda elem: re.sub(r"\d+", "", elem))
 
     # convert emoticons into text
     tweets["text"] = tweets['text'].apply(lambda x: convert_emoticons(x))
     #tweets["text"] = tweets['text'].apply(lambda x: expand_contraction_form(x))
     tweets["text"] = tweets['text'].apply(lambda x: convert_slangs(x))
 
-   
 
     if deep_clean:
         # remove hashtags and mentioned users
-        tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@|#[A-Za-z0-9]+)|([^0-9A-Za-z \t])", "", x))  
-        tweets["text"] = tweets["text"].apply(lambda x: re.sub("(\w)\\1{2,}", "\\1\\1", x))  
-        # remove numbers
-        tweets["text"] = tweets["text"].apply(lambda elem: re.sub(r"\d+", "", elem))
+        tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@|#[A-Za-z0-9]+)|([^0-9A-Za-z \t])", "", x))    
 
     # Lemmatize text
     tweets["text"] = tweets["text"].apply(lambda x: " ".join(word_lemmatizer(x.split())))
