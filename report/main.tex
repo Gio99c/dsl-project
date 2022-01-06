@@ -74,8 +74,8 @@ In the \ref{sec:approach} we will assess what are the most relevant features to 
 Although the \textit{date} attribute could hide some useful insights about the sentiment of the tweet, the major knowledge lies within the \textit{text} attribute. The information extraction from this feature can be performed in different ways and with different processes. We decided to tackle the problem from different points of view and we managed to embed all this data into our model. Firstly, we cleaned up and fix some problems present in the tweets' text, then we exploited the text performing:
 \begin{itemize}
     \item A \textbf{sentiment intensity analysis}\cite{sentiment_analysis} on the text, obtaining new features on the polarization of the sentiments.
-    \item A \textbf{tf-df}\cite{} of the text in order to get the words that mainly influence the sentiments of the tweets.
-    \item A \textbf{word embedding}\cite{} approach with the FastText\cite{fasttext} library to retrieve the morphological relationships between the words in a sentence.
+    \item A \textbf{tf-df}\footnote{Term Frequency - Document Frequency. The tf-df of term $t$ in document $d$ of collection $D$ is computed as: $$tfdf(t) = freq(t,d) * \log(freq(t,D)$$} of the text in order to get the words that mainly influence the sentiments of the tweets.
+    \item A \textbf{word embedding}\cite{wordembeddings} approach with the FastText\cite{fasttext} library to retrieve the morphological relationships between the words in a sentence.
 \end{itemize}
 \begin{figure}[h]
         \centering
@@ -84,7 +84,7 @@ Although the \textit{date} attribute could hide some useful insights about the s
         \label{fig:overall_schema}
 \end{figure}
 Figure \ref{fig:overall_schema} shows a summary of our approach.
-The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with an f1-score\cite{f1} higher than 0.8. This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification into our dataset. 
+The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with a macro F1-score\footnote{The F1-score is the harmonic mean of the precision and recall therefore it is defined for a single class. With macro F1-score we refer to the mean of all classes' F1-scores .} higher than 0.8. This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification\cite{fasttextclassifier} into our dataset. 
 
 Finally, we wanted to add the \textit{user} attribute into the equation. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is probable that a sentiment is predominant to the other one. We did not want to encode the information of each user because of the subsequent dimensionality increase of the dataset with an approach like the One-Hot-Encoding\cite{ohe}. \textbf{***to rephrase}
 So we chose to incorporate the user author of the post at the beginning of the text of the tweet. The text already contains mentioned user whose name is preceded by an at-sign (@). In this way, the word embedding classification will retrieve information about the author of the post like if he was mentioned within it.
@@ -102,13 +102,18 @@ Afterwards, we addressed the tweet duplication issue. There are three kinds of d
 \end{enumerate}
 For the first kind of duplicated tweets, no action is required. Those are very common and eventually short sentences that different authors twitted. They share the same sentiment so it enforces the model to learn that those phases belong to one specific class. The second kind are tweets that have been posted more than once by the same author. This could be a mistake or maybe the user wanted to retweet the same post again. Either way, we decided to keep only one copy of the duplicated post. The most controversial kind of duplication is the last one: regardaless of the author, if the same text is labelled differently, then the classifier will be confused on how to handle samples similar to these ones. For this reason we decided to drop all the records with these conflicting properties.
 
-Then, we tackled the cleaning of the tweets' text. To properly perform this step, we took into consideration a lot of alternatives. Different elements characterize a Twitter post and we tried to draw every possible bit of information from the text. The tweets' length issue led us to inspect the text in search of an encoding-related problem. We found out that the text extracted seems to be encoded in UTF-8\cite{utf8} but some special symbols were parsed as HTML entities\cite{html_entities}. We employed the html library to clean up the text. After that, we lowered the case of the words and we extracted the domain name from the urls contained in the tweets. We exploited two vocabularies\footnote{\textbf{***insert libraries}} to expand into clear words the emoticons and the slang terms. By substituting these pieces of text in addition with some regex to regularize the phrases we obteined a much more coherent and convenient format for the analysis. Ultimately, we applied the lemmatization\cite{lemmatization} to extract the lemma from each word. We preferred lemmatizing to stemming\cite{stemming} in order to preserve the morphology of the words\cite{stemmingVSlemmatizing}.
+Then, we tackled the cleaning of the tweets' text. To properly perform this step, we took into consideration a lot of alternatives. Different elements characterize a Twitter post and we tried to draw every possible bit of information from the text. The tweets' length issue led us to inspect the text in search of an encoding-related problem. We found out that the text extracted seems to be encoded in UTF-8\cite{utf8} but some special symbols were parsed as HTML entities\footnote{Character entities are used to display reserved characters in HTML}. We employed the html library to clean up the text. After that, we lowered the case of the words and we extracted the domain name from the urls contained in the tweets. We exploited two vocabularies\footnote{\textbf{***insert libraries}} to expand into clear words the emoticons and the slang terms. By substituting these pieces of text in addition with some regex to regularize the phrases we obteined a much more coherent and convenient format for the analysis. Ultimately, we applied the lemmatization\cite{lemmatization} to extract the lemma from each word. We preferred lemmatizing to stemming\cite{stemming} in order to preserve the morphology of the words\cite{stemmingVSlemmatizing}.
 Figure \ref{fig:cleaning} shows the cleaning pipeline for the \textit{text} attribute.
 
 At this stage, the \textit{text} feature is ready to be processed. We heavily relied on the tools offered by the NLKT library\cite{nlkt} to carry on the analysis. We employed the Vader Sentiment Intensity Analyzer\cite{vader} to gain the relative frequencies of \textit{negative}, \textit{neutral} and \textit{negative} terms. Besides, also the \textit{compound} value is stored, it is a single value summarises the three frequencies. Following, we used the TextBlob library\cite{textblob} to extract additional features: the \textit{subjectivity} score and the \textit{polarity} index. These variables are correlated among them, but they describe the same phenomenon under different point of view and complement each other.
 
-Going forward, we applied a tf-df to the text word with a relative high minimum support. Our aim was to retrieve the words that were present in a lot of tweets and which meaning was heavily polarized toward one class. In this case, we did not use a normal stop words vocabulary, because there are a lot of common term that are very important for the classification, like the negations. So we created a custom vocabulary that contained only conjunctions and some adverbs.
-
+Going forward, we applied a TF-DF to the text word with a relative high minimum support. Our aim was to retrieve the words that were present in a lot of tweets and which meaning was heavily polarized toward one class. In this case, we did not use a normal stop words vocabulary, because there are a lot of common term that are very important for the classification, like the negations. So we created a custom vocabulary that contained only conjunctions and some adverbs. The results of the TF-DF are shown in Figure \ref{fig:word_cloud}
+\begin{figure}[h]
+        \centering
+        \includegraphics[width=\columnwidth]{word_cloud}
+        \caption{Feature extraction schema of \textit{text} attribute}
+        \label{fig:word_cloud}
+\end{figure}
 Finally, we leveraged the word embedding approach through Meta's FastText library. The vocabulary was built on top of the tweets of the development set. The autotuning feature of the library allowed us to treat the neural network underneath the facade as a black box. We split the development data into training and validation and the model tuned itself by maximizing the resulting f1-score. One of the strenghts of this technique is that by converting the words into multi-dimensional vectors it does not suffer the presence of unfamiliar terms. The output of the neural network is a prediction and the softmax likelihood for each class. We extracted these probabilities and we integrated them into the dataset.
 \begin{figure}[h]
         \centering
@@ -120,7 +125,9 @@ Figure \ref{fig:text_schema} summarises the operations perfomed on the \textit{t
 
 The data is not yet ready to be processed by a classification algorithm. The categorical needs to be addressed. We removed the \textit{text} and the \textit{user} features because we have already extracted the information needed and then we proceed to map the remaining features into numerical ones. All the columns are normalized with a MinMax scaler\cite{minmax} and it is ready to go through the model selection pipeline.
 \subsection{Model selection}\label{sec:model}
-
+- Model introduction
+- Results of the different techniques w/ table
+- Feature importances
 \subsection{Hyperparameters tuning}\label{sec:hypertuning}
 
 \section{Results}\label{sec:results}
