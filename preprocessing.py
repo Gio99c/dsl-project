@@ -1,5 +1,6 @@
 from io import TextIOWrapper
 from os import device_encoding, remove
+from nltk.corpus.reader import util
 import numpy as np
 import pandas as pd
 import regex as re
@@ -14,11 +15,44 @@ from nltk.corpus import stopwords as sw
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from tqdm import tqdm
-import string
 import fasttext
 from emot.emo_unicode import EMOTICONS_EMO
 import html
 import tldextract
+
+from utils import CONTRACTIONS, SLANGS, STOPWORDS
+
+
+class LemmaTokenizer(object):
+    def __init__(self):
+        self.lemmatizer = WordNetLemmatizer()
+    def __call__(self, document):
+        lemmas = []
+        for t in word_tokenize(document):
+            t = t.strip()
+            lemma = self.lemmatizer.lemmatize(t)
+            lemmas.append(lemma)
+        return lemmas
+
+
+
+def expand_contraction_form(text:str) -> str:
+    "Expand conractions form such as 'couldn't' in 'could not' by using the CONTRACTIONS dict"
+    for word in text.split(sep= " "):
+        if word in CONTRACTIONS.keys():
+            
+            text = re.sub(word , CONTRACTIONS[word], text)
+        
+    return text
+
+
+def convert_slangs(text:str) -> str:
+    "Convert the slangs in text by using the SLANGS dict"
+    for word in text.split(sep= " "):
+        if word in SLANGS.keys():
+            text = re.sub(word , SLANGS[word], text)
+    return text
+
 
 def word_lemmatizer(text):
     lem_text = [WordNetLemmatizer().lemmatize(i.strip()) for i in text]
@@ -78,7 +112,6 @@ def extract_features(tweets: pd.DataFrame) -> pd.DataFrame:
 
     return tweets
 
-
 def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.DataFrame:
     """!! Only appliable for train set !! - Drop the duplicated tweets and (optionally) the tweets that are longer than k characters
     Parameters
@@ -108,19 +141,19 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.Dat
 
 def clean_text(tweets: pd.DataFrame, deep_clean=False) -> pd.DataFrame:
     """Clean the text feature from unrelevant information and convert the emoticons into text
-
     Parameters
     ----------
     tweets : pd.DataFrame
         Dataframe of tweets
     deep_clean: boo
         if True performs a deeper cleaning by removing number, hashtags and mentioned users. Default False
-
     Returns
     -------
     pd.DataFrame
         the same dataframe with the function applied
     """
+    tweets["text"] = tweets['text'].apply(lambda x: expand_contraction_form(x))
+
     # Convert HTML entities into characters
     tweets["text"] = tweets["text"].apply(lambda x : html.unescape(x))
 
@@ -132,12 +165,16 @@ def clean_text(tweets: pd.DataFrame, deep_clean=False) -> pd.DataFrame:
     tweets["text"] = tweets['text'].str.replace(pat="((https?:\/\/)?([w]+\.)?\S+)", repl=lambda x: tldextract.extract(x.group(1)).domain, regex=True)
 
     # convert emoticons into text
-    tweets['text'].apply(lambda x: convert_emoticons(x))
+    tweets["text"] = tweets['text'].apply(lambda x: convert_emoticons(x))
+    #tweets["text"] = tweets['text'].apply(lambda x: expand_contraction_form(x))
+    tweets["text"] = tweets['text'].apply(lambda x: convert_slangs(x))
+
+   
 
     if deep_clean:
         # remove hashtags and mentioned users
         tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@|#[A-Za-z0-9]+)|([^0-9A-Za-z \t])", "", x))  
-
+        tweets["text"] = tweets["text"].apply(lambda x: re.sub("(\w)\\1{2,}", "\\1\\1", x))  
         # remove numbers
         tweets["text"] = tweets["text"].apply(lambda elem: re.sub(r"\d+", "", elem))
 
@@ -162,7 +199,7 @@ def text_mining_tfdf(X_train: pd.DataFrame, X_test: pd.DataFrame, min_df=0.01) -
     tuple([pd.DataFrame, pd.DataFrame])
         A tuple with X_train and X_test with the tf-df applied
     """
-    #tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)                                                                     
+    
     vectorizer = TfidfVectorizer(strip_accents="ascii", use_idf=False, min_df=min_df)
     vectorizer.fit(X_train["text"])
     train_tfdf = pd.DataFrame(vectorizer.transform(X_train["text"]).toarray(), columns=vectorizer.get_feature_names())
@@ -243,6 +280,7 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
     scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns=["embedding_negativity", "embedding_positivity"])
     scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns=["embedding_negativity", "embedding_positivity"])
     
+    #pd.concat
     X_train = pd.DataFrame(np.column_stack([X_train, scores_dev]), columns=X_train.columns.append(scores_dev.columns))
     X_test = pd.DataFrame(np.column_stack([X_test, scores_eval]), columns=X_test.columns.append(scores_eval.columns))
 
@@ -291,6 +329,7 @@ def normalize(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFram
     scaler = MinMaxScaler().fit(X_train)
     X_train = pd.DataFrame(scaler.transform(X_train), columns=X_train.columns)
     X_test = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns)
+
 
     return X_train, X_test, y_train
 
