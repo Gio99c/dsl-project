@@ -39,9 +39,9 @@ text_schema %>%
 overall_schema <- grViz('digraph ninja{
   graph [compound = true, rankdir=LR, ranksep=1]
 
-  node [fontname = Helvetica, fontcolor = black,
+  node [fontcolor = black,
         shape = rectangle, width = 1.8, fixedsize = true,
-        color = black]
+        color = black, height=1, fontsize=25]
 
   edge [color = grey50, arrowtail = none]
   
@@ -49,7 +49,8 @@ overall_schema <- grViz('digraph ninja{
     label = "Twitter Dataset|<port1>ids|<port2>date|flag|<port3>text|<port4>user|<port5>sentiment";
     shape=record
     fixedsize = false
-    height=4
+    height=7.6
+    fontsize=25
   ];
   struct1:port1 [style=filled, fillcolor=grey95]
   struct1:port1 -> g
@@ -67,17 +68,18 @@ overall_schema <- grViz('digraph ninja{
   f -> j
   d -> k
   
-  b [label="Feature Extraction", peripheries=2]
-  c [label="Text Cleaning", peripheries=2]
-  d [label="Word Embedding", peripheries=2]
+  b [label="Feature\nExtraction", peripheries=2]
+  c [label="Text\nCleaning", peripheries=2]
+  d [label="Word\nEmbedding", peripheries=2]
   e [label="TF-DF", peripheries=2]
-  f [label="Sentiment Analysis", peripheries=2]
-  g [label="Numerical Value", peripheries=1, style="filled", fillcolor= lightyellow]
-  h [label="Discrete Value", peripheries=1, style="filled", fillcolor= lightyellow]
-  i [label="Weighted Matrix", peripheries=1, style="filled", fillcolor= lightyellow]
-  j [label="Sentiment Features", peripheries=1, style="filled", fillcolor= lightyellow]
-  k [label="Likelihood Features", peripheries=1, style="filled", fillcolor= lightyellow]
+  f [label="Sentiment\nAnalysis", peripheries=2]
+  g [label="Numerical\nValue", peripheries=1, style="filled", fillcolor= lightyellow]
+  h [label="Discrete\nValue", peripheries=1, style="filled", fillcolor= lightyellow]
+  i [label="Weighted\nMatrix", peripheries=1, style="filled", fillcolor= lightyellow]
+  j [label="Sentiment\nFeatures", peripheries=1, style="filled", fillcolor= lightyellow]
+  k [label="Likelihood\nFeatures", peripheries=1, style="filled", fillcolor= lightyellow]
   }')
 
 overall_schema %>%
   export_svg %>% charToRaw %>% rsvg_svg(file="./figures/overall_schema.svg")
+overall_schema
