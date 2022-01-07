@@ -50,6 +50,7 @@ Every sample is characterized by:
     \begin{figure}[h]
         \centering
         \includesvg[width=\columnwidth]{snowflake}
+        \caption{Structure of a 64-bit snowflake id.}
         \label{fig:snowflake}
 \end{figure}
     \item \textit{date}: the timestamp of each tweet. %The date is encoded as a string with the format:
@@ -164,7 +165,7 @@ The main drawback of Hist Gradient Boosting Models is the very large number of h
 \section{Discussion}\label{sec:discussion}
 This classification task extensively relied upon Natural Language Processing library. Every library offers a wide range of tools that allows to effectively retrieve information from the text. We decided to cover more NLP libraries to benefit from the variety of materials at our disposal. Almost every library provides advanced features, such as Part Of Speech Tagging, that could have been beneficial to the classification but we decided not to include in this analysis. 
 
-We tried to operate with the \textit{user} attribute to retrieve some useful information within it. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is likely that a sentiment is predominant to the other one. Nonetheless, the One-Hot-Encoding\cite{ohe} of this features would have resulted into a huge dimensionaly increase of the dataset.
+We tried to operate with the \textit{user} attribute to retrieve some useful information within it. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is likely that a sentiment is predominant to the other one. Nonetheless, the One-Hot-Encoding\cite{ohe} of this features would have resulted into a huge dimensionaly increase of the dataset. Therefore, we did not added this feature into the final dataset.
 
 All the classification algorithm, and the majority of utilities employed in Section \ref{sec:model} and \ref{sec:hypertuning} come from the scikit-learn packages\cite{scikit-learn}. Alongside the classical classification algorithms, we decided to try the Histogram-based Gradient Tree Boosting Classifier because, like the Random Forest Classifier, it is an ensemble of decision tree. Given that the Random Forest Classifier was always among the best-performing algorithms for this task, we wanted to explore how the boosting technique would have performed for this job.
 \bibliography{bibliography}
