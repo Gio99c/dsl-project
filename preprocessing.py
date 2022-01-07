@@ -40,7 +40,6 @@ def expand_contraction_form(text:str) -> str:
     "Expand conractions form such as 'couldn't' in 'could not' by using the CONTRACTIONS dict"
     for word in text.split(sep= " "):
         if word in CONTRACTIONS.keys():
-            
             text = re.sub(word , CONTRACTIONS[word], text)
         
     return text
@@ -177,7 +176,7 @@ def clean_text(tweets: pd.DataFrame, deep_clean=False) -> pd.DataFrame:
 
     if deep_clean:
         # remove hashtags and mentioned users
-        tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@|#[A-Za-z0-9]+)|([^0-9A-Za-z \t])", "", x))    
+        tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@[\w\d]+)|#", "", x))
 
     # Lemmatize text
     tweets["text"] = tweets["text"].apply(lambda x: " ".join(word_lemmatizer(x.split())))
