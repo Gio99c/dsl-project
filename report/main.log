@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.27)  6 JAN 2022 18:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.27)  7 JAN 2022 17:58
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -762,27 +762,55 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 43.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 52.
+
+LaTeX Warning: Citation `snowflake' on page 1 undefined on input line 49.
+
+Package svg Info: Calling Inkscape on input line 52.
+runsystem(inkscape -z -D --export-latex  --file="./figures/snowflake.svg" --exp
+ort-pdf="snowflake_svg-tex.pdf" )...executed.
+
+runsystem(mkdir -p "./svg-inkscape/")...executed.
+
+runsystem(mv "snowflake_svg-tex.pdf" "./svg-inkscape/snowflake_svg-tex.pdf")...
+executed.
+
+runsystem(mv "snowflake_svg-tex.pdf_tex" "./svg-inkscape/snowflake_svg-tex.pdf_
+tex")...executed.
+
+Package svg Info: Last page of `./svg-inkscape/snowflake_svg-tex.pdf' is 1 on i
+nput line 52.
+(./svg-inkscape/snowflake_svg-tex.pdf_tex
+<./svg-inkscape/snowflake_svg-tex.pdf, id=37, page=1, 484.91513pt x 35.55276pt>
+
+File: ./svg-inkscape/snowflake_svg-tex.pdf Graphic file (type pdf)
+<use ./svg-inkscape/snowflake_svg-tex.pdf, page 1>
+Package pdftex.def Info: ./svg-inkscape/snowflake_svg-tex.pdf , page1 used on i
+nput line 56.
+(pdftex.def)             Requested size: 252.0pt x 18.47614pt.
+)
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 59.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 Package svg Info: Last page of `./svg-inkscape/charcount_svg-tex.pdf' is 1 on i
-nput line 59.
+nput line 66.
 
 (./svg-inkscape/charcount_svg-tex.pdf_tex
-<./svg-inkscape/charcount_svg-tex.pdf, id=41, page=1, 736.50616pt x 433.62pt>
+<./svg-inkscape/charcount_svg-tex.pdf, id=42, page=1, 736.50616pt x 433.62pt>
 File: ./svg-inkscape/charcount_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/charcount_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/charcount_svg-tex.pdf , page1 used on i
 nput line 56.
 (pdftex.def)             Requested size: 252.0pt x 148.36177pt.
 )
-Package svg Info: Last page of `./svg-inkscape/unbalanced_svg-tex.pdf' is 1 on 
-input line 65.
 
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+Package svg Info: Last page of `./svg-inkscape/unbalanced_svg-tex.pdf' is 1 on 
+input line 72.
 (./svg-inkscape/unbalanced_svg-tex.pdf_tex
-<./svg-inkscape/unbalanced_svg-tex.pdf, id=43, page=1, 722.7pt x 578.16pt>
+<./svg-inkscape/unbalanced_svg-tex.pdf, id=44, page=1, 722.7pt x 578.16pt>
 File: ./svg-inkscape/unbalanced_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/unbalanced_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/unbalanced_svg-tex.pdf , page1 used on 
@@ -792,29 +820,37 @@ input line 56.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
- <./svg-inkscape/charcount_svg-tex.pdf>]
+ <./svg-inkscape/snowflake_svg-tex.pdf> <./svg-inkscape/charcount_svg-tex.pdf
 
-LaTeX Warning: Citation `fasttext' on page 2 undefined on input line 78.
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/charcount_svg
+-tex.pdf): PDF inclusion: multiple pdfs with page group included in a single pa
+ge
+> <./svg-inkscape/unbalanced_svg-tex.pdf
 
-Package svg Info: Calling Inkscape on input line 82.
-runsystem(inkscape -z -D --export-latex  --file="./figures/overall_schema.svg" 
---export-pdf="overall_schema_svg-tex.pdf" )...executed.
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/unbalanced_sv
+g-tex.pdf): PDF inclusion: multiple pdfs with page group included in a single p
+age
+>]
 
-runsystem(mkdir -p "./svg-inkscape/")...executed.
+LaTeX Warning: Citation `sentiment_analysis' on page 2 undefined on input line 
+88.
 
-runsystem(mv "overall_schema_svg-tex.pdf" "./svg-inkscape/overall_schema_svg-te
-x.pdf")...executed.
 
-runsystem(mv "overall_schema_svg-tex.pdf_tex" "./svg-inkscape/overall_schema_sv
-g-tex.pdf_tex")...executed.
+LaTeX Warning: Citation `wordembeddings' on page 2 undefined on input line 90.
+
+
+LaTeX Warning: Citation `fasttext' on page 2 undefined on input line 90.
 
 Package svg Info: Last page of `./svg-inkscape/overall_schema_svg-tex.pdf' is 1
- on input line 82.
+ on input line 94.
 (./svg-inkscape/overall_schema_svg-tex.pdf_tex
-<./svg-inkscape/overall_schema_svg-tex.pdf, id=131, page=1, 1004.73807pt x 697.
+<./svg-inkscape/overall_schema_svg-tex.pdf, id=166, page=1, 1004.73807pt x 697.
 60625pt>
 File: ./svg-inkscape/overall_schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/overall_schema_svg-tex.pdf, page 1>
@@ -823,62 +859,50 @@ Package pdftex.def Info: ./svg-inkscape/overall_schema_svg-tex.pdf , page1 used
 (pdftex.def)             Requested size: 252.0pt x 174.96529pt.
 )
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+LaTeX Warning: Citation `fasttextclassifier' on page 2 undefined on input line 
+99.
 
 
-LaTeX Warning: Citation `f1' on page 2 undefined on input line 87.
-
-[2 <./svg-inkscape/unbalanced_svg-tex.pdf> <./svg-inkscape/overall_schema_svg-t
-ex.pdf
-
-pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/overall_schem
-a_svg-tex.pdf): PDF inclusion: multiple pdfs with page group included in a sing
-le page
->]
-
-LaTeX Warning: Citation `utf8' on page 3 undefined on input line 105.
+LaTeX Warning: Citation `utf8' on page 2 undefined on input line 114.
 
 
-LaTeX Warning: Citation `html_entities' on page 3 undefined on input line 105.
+LaTeX Warning: Citation `lemmatization' on page 2 undefined on input line 114.
 
 
-LaTeX Warning: Citation `lemmatization' on page 3 undefined on input line 105.
+LaTeX Warning: Citation `stemming' on page 2 undefined on input line 114.
 
 
-LaTeX Warning: Citation `stemming' on page 3 undefined on input line 105.
+LaTeX Warning: Citation `stemmingVSlemmatizing' on page 2 undefined on input li
+ne 114.
 
 
-LaTeX Warning: Citation `stemmingVSlemmatizing' on page 3 undefined on input li
-ne 105.
+LaTeX Warning: Reference `fig:cleaning' on page 2 undefined on input line 115.
+
+[2 <./svg-inkscape/overall_schema_svg-tex.pdf>]
+
+LaTeX Warning: Citation `nlkt' on page 3 undefined on input line 117.
 
 
-LaTeX Warning: Reference `fig:cleaning' on page 3 undefined on input line 106.
+LaTeX Warning: Citation `vader' on page 3 undefined on input line 117.
 
 
-LaTeX Warning: Citation `nlkt' on page 3 undefined on input line 108.
+LaTeX Warning: Citation `textblob' on page 3 undefined on input line 117.
+
+<./figures/word_cloud.png, id=194, 433.10379pt x 300.23022pt>
+File: ./figures/word_cloud.png Graphic file (type png)
+<use ./figures/word_cloud.png>
+Package pdftex.def Info: ./figures/word_cloud.png  used on input line 122.
+(pdftex.def)             Requested size: 252.0pt x 174.68796pt.
+
+LaTeX Warning: Citation `word_cloud' on page 3 undefined on input line 123.
 
 
-LaTeX Warning: Citation `vader' on page 3 undefined on input line 108.
-
-
-LaTeX Warning: Citation `textblob' on page 3 undefined on input line 108.
-
-Package svg Info: Calling Inkscape on input line 115.
-runsystem(inkscape -z -D --export-latex  --file="./figures/text_schema.svg" --e
-xport-pdf="text_schema_svg-tex.pdf" )...executed.
-
-runsystem(mkdir -p "./svg-inkscape/")...executed.
-
-runsystem(mv "text_schema_svg-tex.pdf" "./svg-inkscape/text_schema_svg-tex.pdf"
-)...executed.
-
-runsystem(mv "text_schema_svg-tex.pdf_tex" "./svg-inkscape/text_schema_svg-tex.
-pdf_tex")...executed.
+LaTeX Warning: Citation `word_cloud' on page 3 undefined on input line 123.
 
 Package svg Info: Last page of `./svg-inkscape/text_schema_svg-tex.pdf' is 1 on
- input line 115.
+ input line 129.
 (./svg-inkscape/text_schema_svg-tex.pdf_tex
-<./svg-inkscape/text_schema_svg-tex.pdf, id=186, page=1, 411.45123pt x 470.7548
+<./svg-inkscape/text_schema_svg-tex.pdf, id=197, page=1, 411.45123pt x 470.7548
 2pt>
 File: ./svg-inkscape/text_schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/text_schema_svg-tex.pdf, page 1>
@@ -890,7 +914,47 @@ Package pdftex.def Info: ./svg-inkscape/text_schema_svg-tex.pdf , page1 used on
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Citation `minmax' on page 3 undefined on input line 121.
+LaTeX Warning: Citation `minmax' on page 3 undefined on input line 135.
+
+
+LaTeX Warning: Citation `rf' on page 3 undefined on input line 139.
+
+
+LaTeX Warning: Citation `bnb' on page 3 undefined on input line 140.
+
+
+LaTeX Warning: Citation `bernoulli' on page 3 undefined on input line 140.
+
+
+LaTeX Warning: Citation `svc' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `histgtb' on page 3 undefined on input line 142.
+
+
+LaTeX Warning: Citation `gtb' on page 3 undefined on input line 142.
+
+
+Underfull \hbox (badness 1881) in paragraph at lines 142--143
+[]\OT1/ptm/b/n/10 Histogram-based Gra-di-ent Boost-ing Clas-si-fi-ca-tion
+ []
+
+
+Underfull \hbox (badness 2213) in paragraph at lines 142--143
+\OT1/ptm/b/n/10 Tree [?]\OT1/ptm/m/n/10 : high-performance im-ple-men-ta-tion f
+or big
+ []
+
+
+LaTeX Warning: Reference `tab:results' on page 3 undefined on input line 144.
+
+[3 <./figures/word_cloud.png> <./svg-inkscape/text_schema_svg-tex.pdf>]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 152.
+
+
+LaTeX Warning: Citation `scikit-learn' on page 4 undefined on input line 169.
 
 (./main.bbl)
 
@@ -904,40 +968,41 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 135.
-[3 <./svg-inkscape/text_schema_svg-tex.pdf>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 135.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 173.
+[4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 173.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 135.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 135.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 173.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 173.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: BBE7D969EDF0109469E8C5BB32A1B155;433.
+(rerunfilecheck)             Checksum: C06E0BA5189FFEF8BB5D2ECE18821A8C;433.
 
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 11029 strings out of 492616
- 172073 string characters out of 6129481
- 309699 words of memory out of 5000000
- 14730 multiletter control sequences out of 15000+600000
- 44334 words of font info for 90 fonts, out of 8000000 for 9000
+ 11067 strings out of 492616
+ 172835 string characters out of 6129481
+ 309928 words of memory out of 5000000
+ 14754 multiletter control sequences out of 15000+600000
+ 45470 words of font info for 91 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,10n,54p,1220b,506s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,10n,54p,1277b,598s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
-xlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
-ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
-e/2019/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2019/t
-exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/
-fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/typ
-e1/urw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/tim
-es/utmri8a.pfb>
-Output written on main.pdf (3 pages, 226253 bytes).
+exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/tex
+live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
+e/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/
+2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/20
+19/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2019/texmf
+-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/font
+s/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/u
+rw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/u
+tmri8a.pfb>
+Output written on main.pdf (4 pages, 4925109 bytes).
 PDF statistics:
- 230 PDF objects out of 1000 (max. 8388607)
- 174 compressed objects within 2 object streams
- 23 named destinations out of 1000 (max. 500000)
- 105 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 255 PDF objects out of 1000 (max. 8388607)
+ 194 compressed objects within 2 object streams
+ 30 named destinations out of 1000 (max. 500000)
+ 120 words of extra memory for PDF output out of 10000 (max. 10000000)
 
