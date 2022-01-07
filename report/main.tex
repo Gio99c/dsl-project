@@ -47,7 +47,11 @@ The objective of the competition was to build a model that is able to classify w
 Every sample is characterized by:
 \begin{itemize}
     \item \textit{ids}: the unique identifier of the tweet. It is represented by a progressive integer number that is related to the timestamp of the tweet. By digging in the past twitter documentation, we found out that the tweet id is generated with a snowflake schema\cite{snowflake}, invented by Twitter for the generation of sequential ids for their tweets.
-    \textbf{***add schema}
+        \begin{figure}[h]
+        \centering
+        \includesvg[width=\columnwidth]{snowflake}
+        \label{fig:snowflake}
+    \end{figure}
     \item \textit{date}: the timestamp of each tweet. %The date is encoded as a string with the format:
     %$$weekday \quad month \quad day \quad hour:min:sec \quad tz \quad year$$
     %From this schema, the information can be easily extracted and exploited to train the model.
