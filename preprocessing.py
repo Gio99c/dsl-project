@@ -151,9 +151,9 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
 
     np.savetxt("train.txt", text_train, fmt="%s")
 
-    model = fasttext.train_supervised("train.txt", epoch =5, wordNgrams=2, wsbucket = 1003902, cutoff = 0, dim = 136, dsub= 2, label = "__label__", 
-                                     lr =0.20784007534156418, lrUpdateRate = 100, maxn = 6, minCount = 1, minCountLabel = 0 ,minn = 3, neg = 5, qnorm = False, qout = False,
-                                     retrain = False, saveOutput = False,seed = 0, t= 0.0001, thread = 15, verbose = 2, ws =5)
+    model = fasttext.train_supervised("train.txt", epoch =5, wordNgrams=2, bucket = 1003902, dim = 136, 
+                                     lr =0.20784007534156418, lrUpdateRate = 100, maxn = 6, minCount = 1, minCountLabel = 0 ,minn = 3, neg = 5,
+                                    seed = 0, t= 0.0001, thread = 15, verbose = 2, ws =5)
     remove("train.txt")
 
     scores_dev = []
@@ -277,74 +277,6 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     return tweets
 
     
-"""def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFrame, pd.DataFrame]):
-Add the word embeddings scores to the development and evaluation set, based on the vocabolury of the training set.
-    Parameters
-    ----------
-    X_train : pd.DataFrame
-        Devolopment set dataframe
-    X_test : pd.DataFrame
-        Evaluation set dataframe
-    Returns
-    -------
-    tuple([pd.DataFrame, pd.DataFrame, pd.Series])
-        a tuple with X_train, X_test and y_train
-    
-
-    print('Starting word embeddings')
-    
-    
-    X_valid_train, X_valid_test, _, _ = train_test_split(X_train, X_train["sentiment"], test_size=0.2, stratify= X_train["sentiment"], random_state=42)
-
-    text_train = np.array("__label__") + X_valid_train["sentiment"].astype("str").values + np.array(" ") + X_valid_train["text"].values
-    text_valid = np.array("__label__") + X_valid_test["sentiment"].astype("str").values + np.array(" ") + X_valid_test["text"].values
-
-    np.savetxt("train.txt", text_train, fmt="%s")
-    np.savetxt("valid.txt", text_valid, fmt="%s")
-
-    model = fasttext.train_supervised("train.txt", autotuneValidationFile="valid.txt")
-
-    remove("train.txt")
-    remove("valid.txt")
-
-
-
-    new_features_names= ["embedding_negativity", "embedding_positivity"]
-
-    #lo so, questa cosa è poco leggibile, la migliorerò
-    scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns= new_features_names)
-    scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns= new_features_names)
-    
-    #pd.concat
-    X_train = pd.DataFrame(np.column_stack([X_train, scores_dev]), columns=X_train.columns.append(scores_dev.columns))
-    X_test = pd.DataFrame(np.column_stack([X_test, scores_eval]), columns=X_test.columns.append(scores_eval.columns))
-
-    return X_train, X_test"""
-
-
-"""def convert_categorical(tweets: pd.DataFrame) -> pd.DataFrame:
-    Converts the features that are not categorical
-    Parameters
-    ----------
-    tweets : pd.DataFrame
-        Dataframe of tweets
-    Returns
-    -------
-    pd.DataFrame
-        the same dataframe with the function applied
-    
-   # tweets.drop(columns=["text"], inplace=True) #when the schema will be fixed, this will be moved in the last text processing step
-
-    day_of_week_dict = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6, "Sun": 7}
-    months_dict = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
-    
-    tweets["day_of_week"] = list(map(lambda x: day_of_week_dict[x], tweets["day_of_week"]))
-    tweets["month_of_year"] = list(map(lambda x: months_dict[x], tweets["month_of_year"]))
-
-
-    return tweets"""
-
-    
 def normalize(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFrame, pd.DataFrame, pd.Series]):
     """Applies a MinMaxScaler to all the features of the dataframes and pops y_train from X_train
     Parameters
@@ -370,6 +302,8 @@ def normalize(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFram
 
 
 def drop_columns(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFrame, pd.DataFrame]):
+
+    # Drop useless columns 
     columns_to_drop = ["text", "user", "flag", "date", "time"]
 
     X_train.drop(columns=columns_to_drop, inplace=True)
@@ -379,5 +313,6 @@ def drop_columns(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataF
 
 
 def save_results(y_pred: list, file_path: str) -> None:
+    # Save results in csv format
     pd.Series(y_pred, name="Predicted").to_csv(file_path, index_label="Id")
     print(f"Resulted saved in {file_path}")
