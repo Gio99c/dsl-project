@@ -1,17 +1,15 @@
-from io import TextIOWrapper
-from os import device_encoding, remove
-from nltk.corpus.reader import util
+from os import remove
+#from nltk.corpus.reader import util
 import numpy as np
 import pandas as pd
 import regex as re
-from scipy.sparse.construct import rand
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import  MinMaxScaler
 from sklearn.model_selection import train_test_split
-from sklearn.compose import ColumnTransformer
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+#from sklearn.compose import ColumnTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
-from nltk.corpus import stopwords as sw
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from tqdm import tqdm
@@ -20,10 +18,11 @@ from emot.emo_unicode import EMOTICONS_EMO
 import html
 import tldextract
 
+from emot.emo_unicode import EMOTICONS_EMO
 from utils import CONTRACTIONS, SLANGS, STOPWORDS
 
 
-class LemmaTokenizer(object):
+"""class LemmaTokenizer(object):
     def __init__(self):
         self.lemmatizer = WordNetLemmatizer()
     def __call__(self, document):
@@ -32,22 +31,19 @@ class LemmaTokenizer(object):
             t = t.strip()
             lemma = self.lemmatizer.lemmatize(t)
             lemmas.append(lemma)
-        return lemmas
-
+        return lemmas"""
 
 
 def expand_contraction_form(text:str) -> str:
-    "Expand conractions form such as 'couldn't' in 'could not' by using the CONTRACTIONS dict"
+    # Replace the contractions from a string to their equivalent by using CONTRCTIONS dic in utils
     for word in text.split(sep= " "):
         if word in CONTRACTIONS.keys():
-            
             text = re.sub(word , CONTRACTIONS[word], text)
-        
     return text
 
 
 def convert_slangs(text:str) -> str:
-    "Convert the slangs in text by using the SLANGS dict"
+    # Replace the slangs with their equivalent by using SLANG dic in utils
     for word in text.split(sep= " "):
         if word in SLANGS.keys():
             text = re.sub(word , SLANGS[word], text)
@@ -58,32 +54,23 @@ def word_lemmatizer(text):
     lem_text = [WordNetLemmatizer().lemmatize(i.strip()) for i in text]
     return lem_text
 
+
 def convert_emoticons(text:str) -> str:
-    "Convert the emoticons in text such as ':)' by using the EMOTICONS_EMO dict"
+    # Replace the emoticons with their equivalent by using EMOTICONS_EMO dic in emo.unicode_emo
     for emot in EMOTICONS_EMO:
         text = re.sub(re.escape(emot), EMOTICONS_EMO[emot], text)
     return text
 
 
-def load(filepath="./DSL2122_january_dataset/development.csv") -> pd.DataFrame:
-    """Load the dataset
-    Parameters
-    ----------
-    filepath: string
-        filepath of the dataset to load
-    Returns
-    -------
-    pd.DataFrame
-        the loaded dataframe
-    """
-
+def load_dataset(filepath="./DSL2122_january_dataset/development.csv") -> pd.DataFrame:
+    # Return the dataset
     try:
         return pd.read_csv(filepath, encoding='utf-8')
     except FileNotFoundError:
         print('File not found')
 
 
-def extract_features(tweets: pd.DataFrame) -> pd.DataFrame:
+def extract_date_features(tweets: pd.DataFrame) -> pd.DataFrame:
     """Extract different features from the existsting ones
     Parameters
     ----------
@@ -98,21 +85,26 @@ def extract_features(tweets: pd.DataFrame) -> pd.DataFrame:
     new_cols_date = ["day_of_week", "month_of_year", "day_of_month", "time"]
 
     tweets[new_cols_date] = tweets['date'].str.split(' ', expand=True)[[0,1,2,3]]
-    tweets["hour_of_day"] = tweets['time'].str.split(':', expand=True)[0].astype(int)
+    tweets["hour_of_day"] = tweets['time'].str.split(':', expand=True)[0].astype(int) # Extract only hour from time
+    tweets['day_of_month']= pd.to_numeric(tweets['day_of_month'])   # Cast int day_of_month
 
-    # Cast int of day of the month
-    #tweets['day_of_month']= pd.to_numeric(tweets['day_of_month'])
-
-    # Drop columns that are no important 
+    # Drop useless columns
     cols_to_drop = ["date", "time", "flag"]
     tweets.drop(columns= cols_to_drop, inplace=True)
 
-    # Extract the numb of chars in the text
-    tweets['char_count'] = list(map(lambda x: len(x), tweets['text'])) 
 
     return tweets
 
-def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.DataFrame:
+
+def extract_text_features(tweets: pd.DataFrame) -> pd.DataFrame:
+    # Extract the numb of chars in the text and drop too long tweets
+    tweets['char_count'] = list(map(lambda x: len(html.unescape(x)), tweets['text']))
+    tweets = tweets.loc[tweets['char_count'] <= 140]
+
+    return tweets
+
+
+def drop_duplicates(tweets: pd.DataFrame) -> pd.DataFrame:
     """!! Only appliable for train set !! - Drop the duplicated tweets and (optionally) the tweets that are longer than k characters
     Parameters
     ----------
@@ -133,13 +125,10 @@ def drop_duplicates(tweets: pd.DataFrame, drop_long_text=False, k=140) -> pd.Dat
     # drop all the tweets with the same text but diffent sentiment
     tweets = tweets[~(tweets.duplicated(subset="text") & ~tweets.duplicated(subset=["text", "sentiment"]))]
 
-    if drop_long_text:
-        tweets = tweets.loc[tweets['char_count'] <= k]
-
     return tweets
 
 
-def clean_text(tweets: pd.DataFrame, deep_clean=False) -> pd.DataFrame:
+def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
     """Clean the text feature from unrelevant information and convert the emoticons into text
     Parameters
     ----------
@@ -224,8 +213,8 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         the same dataframe with six new features: neg, neu, pos, compound, polarity, subjectivity
     """
-    #tweets["text"] = list(map(lambda x: re.sub("(@[\d\w]+)|(https?://[\w\d]+)|((www\.)[\d\w]+)|", "", x), tweets["text"])) #text cleaning (urls and users @)
 
+    # EXPLAIN 
     sentiment = np.array(list(map(lambda x: list(SentimentIntensityAnalyzer().polarity_scores(x).values()), tqdm(tweets["text"]))))
     tweets["neg"] = sentiment[:, 0]
     tweets["neu"] = sentiment[:, 1]
@@ -235,23 +224,7 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
     tweets["subjectivity"] = list(map(lambda x: TextBlob(x).sentiment.subjectivity, tqdm(tweets["text"])))
     return tweets
 
-def add_user_text(tweets: pd.DataFrame) -> pd.DataFrame:
-    """Add the username as the first word (with the @) in the text feature
-    Parameters
-    ----------
-    tweets : pd.DataFrame
-        Dataframe of tweets
-    Returns
-    -------
-    pd.DataFrame
-        Same dataframe with the function applied
-    """
-    tweets["text"] = np.array("@") + tweets["user"].values + np.array(" ") + tweets["text"].values
-    tweets.drop(columns=["user"], inplace=True)
-
-    return tweets
     
-
 def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFrame, pd.DataFrame]):
     """Add the word embeddings scores to the development and evaluation set, based on the vocabolury of the training set.
     Parameters
@@ -265,27 +238,37 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
     tuple([pd.DataFrame, pd.DataFrame, pd.Series])
         a tuple with X_train, X_test and y_train
     """
-    print('Sto facendo autovalidation')
+
+    print('Starting word embeddings')
     
     
-    X_valid_train, X_valid_test, y_valid_train, y_valid_test = train_test_split(X_train, X_train["sentiment"], test_size=0.2, stratify= X_train["sentiment"], random_state=42)
+    X_valid_train, X_valid_test, _, _ = train_test_split(X_train, X_train["sentiment"], test_size=0.2, stratify= X_train["sentiment"], random_state=42)
+    
     text_train = np.array("__label__") + X_valid_train["sentiment"].astype("str").values + np.array(" ") + X_valid_train["text"].values
     text_valid = np.array("__label__") + X_valid_test["sentiment"].astype("str").values + np.array(" ") + X_valid_test["text"].values
+
     np.savetxt("train.txt", text_train, fmt="%s")
-    np.savetxt("valid.txt", text_train, fmt="%s")
+    np.savetxt("valid.txt", text_valid, fmt="%s")
+
     model = fasttext.train_supervised("train.txt", autotuneValidationFile="valid.txt")
+
     remove("train.txt")
     remove("valid.txt")
 
+
+
+    new_features_names= ["embedding_negativity", "embedding_positivity"]
+
     #lo so, questa cosa è poco leggibile, la migliorerò
-    scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns=["embedding_negativity", "embedding_positivity"])
-    scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns=["embedding_negativity", "embedding_positivity"])
+    scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns= new_features_names)
+    scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns= new_features_names)
     
     #pd.concat
     X_train = pd.DataFrame(np.column_stack([X_train, scores_dev]), columns=X_train.columns.append(scores_dev.columns))
     X_test = pd.DataFrame(np.column_stack([X_test, scores_eval]), columns=X_test.columns.append(scores_eval.columns))
 
     return X_train, X_test
+
 
 def convert_categorical(tweets: pd.DataFrame) -> pd.DataFrame:
     """Converts the features that are not categorical
@@ -305,8 +288,8 @@ def convert_categorical(tweets: pd.DataFrame) -> pd.DataFrame:
     
     tweets["day_of_week"] = list(map(lambda x: day_of_week_dict[x], tweets["day_of_week"]))
     tweets["month_of_year"] = list(map(lambda x: months_dict[x], tweets["month_of_year"]))
-    tweets["day_of_month"] = list(map(lambda x: int(x), tweets["day_of_month"]))
-    tweets["hour_of_day"] = list(map(lambda x: int(x), tweets["hour_of_day"]))
+    #tweets["day_of_month"] = list(map(lambda x: int(x), tweets["day_of_month"]))
+    #tweets["hour_of_day"] = list(map(lambda x: int(x), tweets["hour_of_day"]))
 
     return tweets
 
@@ -334,12 +317,9 @@ def normalize(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFram
 
     return X_train, X_test, y_train
 
-def save_results(y_pred: list, fp: str):
-    """Saves the prediction of the classification model in the sample_submission.csv file
-    Parameters
-    ----------
-    y_pred : list
-        The list of predictions made by the classifier
-    """
 
+
+def save_results(y_pred: list, fp: str):
+ 
     pd.Series(y_pred, name="Predicted").to_csv(fp, index_label="Id")
+    print(f"Resulted saved in {fp}")
