@@ -18,7 +18,7 @@
 \usepackage[autostyle]{csquotes}
 \begin{document}
 
-\title{Twitter Sentiment Analysis Classification}
+\title{\textit{Tweets} Sentiment Analysis}
 
 \author{\IEEEauthorblockN{Giuseppe Concialdi}
 \IEEEauthorblockA{\textit{Politecnico di Torino} \\
@@ -41,17 +41,20 @@ christian.montecchiani@studenti.polito.it}
 The objective of the competition was to build a model that is able to classify whether a tweet contains positive or negative sentiments. The dataset provided is arranged as follow:
 \begin{itemize}
     \item A \textbf{development} set composed by 224,994 records of tweets. Each sample has six different features, including the \textit{sentiment} attribute that is the target of the classification.
-    \item A \textbf{evaluation} set consisting of 74,999 samples. Its dimension is one-third of the development set and it does not feature the target variable.
+    \item A \textbf{evaluation} set consisting of 74,999 samples. It does not contain the target variable.
 \end{itemize}
-\textbf{***move}The dataset is quite large, so the time required to manage the operations on the data should be taken into account because it could be not trivial. It is essential to retrieve some meaningful information of the data by exploiting its features. In particular, every sample is characterized by:
+%\textbf{***move}The dataset is quite large, so the time required to manage the operations on the data should be taken into account because it could be not trivial. It is essential to retrieve some meaningful information of the data by exploiting its features.
+Every sample is characterized by:
 \begin{itemize}
-    \item \textit{ids}: the unique identifier of the tweet. It is represented by a progressive integer number that is related to the timestamp of the tweet. The lowest value of the \textit{ids} attribute is 1,467,811,193 while the highest is 2,329,205,038. It is uncertain if the dataset includes only a subset of the actual number of posted tweets or if the increase of the values follows some pattern. In fact, by digging in the past twitter documentation, we found out that the tweet id is generated with a snowflake schema, invented by Twitter for the generation of sequential ids for their tweets.
-    \item \textit{date}: the timestamp of each tweet. The date is encoded as a string not in the ISO 8601 standard\cite{iso8601} but with the format:
-    $$weekday \quad month \quad day \quad hour:min:sec \quad tz \quad year$$
-    From this schema, the information can be easily extracted and exploited to train the model. The dates in the dataset range from April 6 to June 25 of 2009. Knowing the temporal ranges will help during the preprocessing phase.
-    \item \textit{flag}: a string whose significance is unsure. It is present in the whole dataset with the unique value of \texttt{NO\_QUERY}. Given its absence of meaning, this feature will be removed without a second thought, but it is possible that it would report the query used to retrieve the tweets when they were extracted using some Twitter APIs.
-    \item \textit{user}: the username of the creator of the tweet. Even though there are almost 225 thousand tweets, there are only 10,647 different usernames. Therefore, on average, the users are very active and they have probably posted several tweets in this period.
-    \item \textit{text}: the text of the tweet. This is the core part of the analysis, it embodies a lot of insights that can be extracted and analyzed to retrieve the overall polarity of the tweet's sentiments. In 2009 the maximum length of a tweet was 140 characters\cite{tweet_lenght}. However \ref{fig:charcount} shows that some tweets exceed this threshold, so there are likely issues with the encoding of the text extracted.
+    \item \textit{ids}: the unique identifier of the tweet. It is represented by a progressive integer number that is related to the timestamp of the tweet. By digging in the past twitter documentation, we found out that the tweet id is generated with a snowflake schema\cite{snowflake}, invented by Twitter for the generation of sequential ids for their tweets.
+    \textbf{***add schema}
+    \item \textit{date}: the timestamp of each tweet. %The date is encoded as a string with the format:
+    %$$weekday \quad month \quad day \quad hour:min:sec \quad tz \quad year$$
+    %From this schema, the information can be easily extracted and exploited to train the model.
+    The dates in the dataset range from April 6 to June 25 of 2009. Knowing the temporal ranges will help during the preprocessing phase.
+    \item \textit{flag}: a string whose significance is unsure. It is present in the whole dataset with the unique value of \texttt{NO\_QUERY}. %Given its absence of meaning, this feature will be removed without a second thought, but it is possible that it would report the query used to retrieve the tweets when they were extracted using some Twitter APIs.
+    \item \textit{user}: the username of the creator of the tweet. Even though there are almost 225 thousand tweets, there are only 10,647 different usernames. %Therefore, on average, the users are very active and they have probably posted several tweets in this period.
+    \item \textit{text}: the text of the tweet. This is the core part of the analysis, it embodies a lot of insights that can be extracted and analyzed to retrieve the overall polarity of the tweet's sentiments. In 2009 the maximum length of a tweet was 140 characters\cite{tweet_lenght}. However Figure \ref{fig:charcount}, shows that some tweets exceed this threshold, so there are likely issues with the encoding of the text extracted.
     \item \textit{sentiment}: the target variable of the classification. It assumes two possible integer values: 0 and 1 that represent respectively negative and positive sentiments. The dataset is fairly unbalanced, as shown in figure \ref{fig:unbalanced}, there are more positive sentiments than negative ones.
 \end{itemize}
 \begin{figure}[h]
@@ -66,16 +69,21 @@ The objective of the competition was to build a model that is able to classify w
         \caption{Distribution of the tweets' sentiments in the training dataset}
         \label{fig:unbalanced}
 \end{figure}
-In the \ref{sec:approach} we will assess what are the most relevant features to carry on the classification and how we will extract the relevant information that lies within each feature.
+The dataset does not feature any missing value, but it contains redundant information that is useless for the analysis.
+
+In Section \ref{sec:approach} we will assess what are the most relevant features to carry on the classification and how we will extract the relevant information that lies within each feature.
 
 \section{Proposed approach}\label{sec:approach}
-\textbf{***Move in overview maybe with a table}The dataset does not feature any missing value, but it contains redundant information that is useless for the analysis. We decided to extract the time-related information from the \textit{date} attribute. In this manner, we added new features to the dataset and also some aggregated measures like the time of the day (morning, afternoon, night) and the time of the time (workday, weekend) during which the tweet was posted. At this stage was still unknown whether all these attributes extracted from the \textit{date} variable would have been useful or not. That is because the \textit{ids} feature is not useless, but it already encodes the timestamp of the tweet. Nonetheless, we decided to leave those features and figure out later if their relative importance would matter.
+The preprocessing was characterized by the features extraction and the text mining phases.
+
+We decided to extract the time-related information from the \textit{date} attribute. 
+At this stage was still unknown whether all these attributes extracted from the \textit{date} variable would have been useful or not. That is because the \textit{ids} feature is not useless, but it already encodes the timestamp of the tweet. Nonetheless, we decided to leave those features and figure out later if their relative importance would matter.
 
 Although the \textit{date} attribute could hide some useful insights about the sentiment of the tweet, the major knowledge lies within the \textit{text} attribute. The information extraction from this feature can be performed in different ways and with different processes. We decided to tackle the problem from different points of view and we managed to embed all this data into our model. Firstly, we cleaned up and fix some problems present in the tweets' text, then we exploited the text performing:
 \begin{itemize}
     \item A \textbf{sentiment intensity analysis}\cite{sentiment_analysis} on the text, obtaining new features on the polarization of the sentiments.
     \item A \textbf{tf-df}\footnote{Term Frequency - Document Frequency. The tf-df of term $t$ in document $d$ of collection $D$ is computed as: $$tfdf(t) = freq(t,d) * \log(freq(t,D)$$} of the text in order to get the words that mainly influence the sentiments of the tweets.
-    \item A \textbf{word embedding}\cite{wordembeddings} approach with the FastText\cite{fasttext} library to retrieve the morphological relationships between the words in a sentence.
+    \item A \textbf{word embeddings}\cite{wordembeddings} approach with the FastText\cite{fasttext} library to retrieve the morphological relationships between the words in a sentence.
 \end{itemize}
 \begin{figure}[h]
         \centering
@@ -84,10 +92,7 @@ Although the \textit{date} attribute could hide some useful insights about the s
         \label{fig:overall_schema}
 \end{figure}
 Figure \ref{fig:overall_schema} shows a summary of our approach.
-The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with a macro F1-score\footnote{The F1-score is the harmonic mean of the precision and recall therefore it is defined for a single class. With macro F1-score we refer to the mean of all classes' F1-scores .} higher than 0.8. This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification\cite{fasttextclassifier} into our dataset. 
-
-Finally, we wanted to add the \textit{user} attribute into the equation. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is probable that a sentiment is predominant to the other one. We did not want to encode the information of each user because of the subsequent dimensionality increase of the dataset with an approach like the One-Hot-Encoding\cite{ohe}. \textbf{***to rephrase}
-So we chose to incorporate the user author of the post at the beginning of the text of the tweet. The text already contains mentioned user whose name is preceded by an at-sign (@). In this way, the word embedding classification will retrieve information about the author of the post like if he was mentioned within it.
+The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with a macro F1-score\footnote{The F1-score is the harmonic mean of the precision and recall therefore it is defined for a single class. With macro F1-score we refer to the mean of all classes' F1-scores.} higher than 0.8. This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification\cite{fasttextclassifier} into our dataset. 
 
 Sections \ref{sec:preprocessing} and \ref{sec:model} will dig into the details of the three different text mining techniques and some comments about the word embedding can be found in the Discussion section \ref{sec:discussion} of the paper.
 
@@ -111,10 +116,10 @@ Going forward, we applied a TF-DF to the text word with a relative high minimum 
 \begin{figure}[h]
         \centering
         \includegraphics[width=\columnwidth]{word_cloud}
-        \caption{Feature extraction schema of \textit{text} attribute}
+        \caption{Word Cloud generated by the results of the TF-DF. The figure has been created using the wordcloud library\cite{word_cloud}}
         \label{fig:word_cloud}
 \end{figure}
-Finally, we leveraged the word embedding approach through Meta's FastText library. The vocabulary was built on top of the tweets of the development set. The autotuning feature of the library allowed us to treat the neural network underneath the facade as a black box. We split the development data into training and validation and the model tuned itself by maximizing the resulting f1-score. One of the strenghts of this technique is that by converting the words into multi-dimensional vectors it does not suffer the presence of unfamiliar terms. The output of the neural network is a prediction and the softmax likelihood for each class. We extracted these probabilities and we integrated them into the dataset.
+Finally, we leveraged the word embeddings approach through Meta's FastText library. The vocabulary was built on top of the tweets of the development set. The autotuning feature of the library allowed us to treat the neural network underneath the facade as a black box. We split the development data into training and validation and the model tuned itself by maximizing the resulting f1-score. One of the strenghts of this technique is that by converting the words into multi-dimensional vectors it does not suffer the presence of unfamiliar terms. The output of the neural network is a prediction and the softmax likelihood for each class. We extracted these probabilities and we integrated them into the dataset.
 \begin{figure}[h]
         \centering
         \includesvg[width=\columnwidth]{text_schema}
@@ -125,17 +130,39 @@ Figure \ref{fig:text_schema} summarises the operations perfomed on the \textit{t
 
 The data is not yet ready to be processed by a classification algorithm. The categorical needs to be addressed. We removed the \textit{text} and the \textit{user} features because we have already extracted the information needed and then we proceed to map the remaining features into numerical ones. All the columns are normalized with a MinMax scaler\cite{minmax} and it is ready to go through the model selection pipeline.
 \subsection{Model selection}\label{sec:model}
-- Model introduction
-- Results of the different techniques w/ table
-- Feature importances
+We chose four different algorithms to perform the classification task and we compared their performances to assess which are the best classificators to perform this job:
+\begin{itemize}
+    \item \textbf{Random Forest Classifier\cite{rf}}: ensemble of decision trees.
+    \item \textbf{Bernoulli Naïve Bayes\cite{bnb}}: classifier for multivariate Bernoulli\cite{bernoulli} models.
+    \item \textbf{Linear Support Vector Classifier\cite{svc}}: linear kernel version of the more general SVC.
+    \item \textbf{Histogram-based Gradient Boosting Classification Tree\cite{histgtb}}: high-performance implementation for big datasets of the Gradient Tree Boosting Classifier\cite{gtb}. 
+\end{itemize}
+To test the effectiveness of our preprocessing, we tried to test the performances of the models by increasingly combining the results of the different techniques applied to the \textit{text} attribute. As it is possible to see in Table \ref{tab:results}, at first we applied only the word embeddings approach, then we joined it with the sentiment extraction results and in the last trial, we added the TF-DF outcomes into the equation. It is possible to see that our baseline with the word embeddings provides a fairly high F1-score. The highest score is reached by bringing together all the extracted features with the different methods.
+
+During this phase, we exploited the Random Forest feature importances to understand what are the most relevant features upon which the algorithm is splitting the samples. Accordingly to our results, we found out that the most significant attributes are the likelihood resulting by the word embeddings classification, following there are the sentiment features and lastly some very polarized word coming from the TF-DF. We also discovered that the \textit{ids} attribute was always more relevant than the feature extracted on the date, thus we decided to remove those features and leave only the id.
 \subsection{Hyperparameters tuning}\label{sec:hypertuning}
+- For tuning our models we first need to split the development dataset. We decide to keep 80\% of the records in the training set, and use the remaining 20\% for the test set. To optimize our models ..
+The main drawback of Hist Gradient Boosting Models is the very large number of hyperparameters to be tuned. Approaching this problem with a standard grid search is computationally prohibitive. HalvingGridSearch is an hyperparameter optimization technique that tries all the candidates with a small amount of resources and iteratively selects the best candidates, using more and more resources.
+
+
+\begin{table}[]
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parameters}                    & \textbf{  Values} \\ \midrule
+\multicolumn{1}{l|}{criterion}         & gini, entropy   \\
+\multicolumn{1}{l|}{min\_sample\_leaf} & 20,35,60        \\
+\multicolumn{1}{l|}{max\_features}     & sqrt, log2      \\ \bottomrule
+\end{tabular}
+\end{table}
 
 \section{Results}\label{sec:results}
-Here you will present your results (models \& configurations selected, performance achieved)
-
+- We will now compare the results obtained with the two models, using the hyperparameters discussed in the previous section.
 \section{Discussion}\label{sec:discussion}
-Any relevant discussion goes here.
+This classification task extensively relied upon Natural Language Processing library. Every library offers a wide range of tools that allows to effectively retrieve information from the text. We decided to cover more NLP libraries to benefit from the variety of materials at our disposal. Almost every library provides advanced features, such as Part Of Speech Tagging, that could have been beneficial to the classification but we decided not to include in this analysis. 
 
+We tried to operate with the \textit{user} attribute to retrieve some useful information within it. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is likely that a sentiment is predominant to the other one. Nonetheless, the One-Hot-Encoding\cite{ohe} of this features would have resulted into a huge dimensionaly increase of the dataset.
+
+All the classification algorithm, and the majority of utilities employed in Section \ref{sec:model} and \ref{sec:hypertuning} come from the scikit-learn packages\cite{scikit-learn}. Alongside the classical classification algorithms, we decided to try the Histogram-based Gradient Tree Boosting Classifier because, like the Random Forest Classifier, it is an ensemble of decision tree. Given that the Random Forest Classifier was always among the best-performing algorithms for this task, we wanted to explore how the boosting technique would have performed for this job.
 \bibliography{bibliography}
 \bibliographystyle{ieeetr}
 
