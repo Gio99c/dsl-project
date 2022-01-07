@@ -21,19 +21,6 @@ import tldextract
 from emot.emo_unicode import EMOTICONS_EMO
 from utils import CONTRACTIONS, SLANGS, STOPWORDS
 
-
-"""class LemmaTokenizer(object):
-    def __init__(self):
-        self.lemmatizer = WordNetLemmatizer()
-    def __call__(self, document):
-        lemmas = []
-        for t in word_tokenize(document):
-            t = t.strip()
-            lemma = self.lemmatizer.lemmatize(t)
-            lemmas.append(lemma)
-        return lemmas"""
-
-
 def expand_contraction_form(text:str) -> str:
     # Replace the contractions from a string to their equivalent by using CONTRCTIONS dic in utils
     for word in text.split(sep= " "):
@@ -160,13 +147,14 @@ def clean_text(tweets: pd.DataFrame) -> pd.DataFrame:
 
     # convert emoticons into text
     tweets["text"] = tweets['text'].apply(lambda x: convert_emoticons(x))
-    #tweets["text"] = tweets['text'].apply(lambda x: expand_contraction_form(x))
+
+    # conver slang
     tweets["text"] = tweets['text'].apply(lambda x: convert_slangs(x))
 
 
     
     # remove hashtags and mentioned users
-    tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@|#[A-Za-z0-9]+)|([^0-9A-Za-z \t])", "", x))    
+    tweets["text"] = tweets["text"].apply(lambda x: re.sub(r"(@[\w\d]+)|#", "", x))
 
     # Lemmatize text
     tweets["text"] = tweets["text"].apply(lambda x: " ".join(word_lemmatizer(x.split())))
@@ -203,7 +191,11 @@ def text_mining_tfdf(X_train: pd.DataFrame, X_test: pd.DataFrame, min_df=0.01) -
 
 
 def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
-    """Extract the sentiment from the text feature
+    """Extract the sentiment from the text feature:
+        neg, neu, pos: relative frequencies of negative, neutral and positive word
+        compound: mean of neg, neu and pos
+        polarity: index of positivity of the tweet
+        subjectivity: index of subjectivity of the tweet
     Parameters
     ----------
     tweets : pd.DataFrame
@@ -214,7 +206,6 @@ def text_mining_sentiment(tweets: pd.DataFrame) -> pd.DataFrame:
         the same dataframe with six new features: neg, neu, pos, compound, polarity, subjectivity
     """
 
-    # EXPLAIN 
     sentiment = np.array(list(map(lambda x: list(SentimentIntensityAnalyzer().polarity_scores(x).values()), tqdm(tweets["text"]))))
     tweets["neg"] = sentiment[:, 0]
     tweets["neu"] = sentiment[:, 1]
@@ -255,13 +246,20 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
     remove("train.txt")
     remove("valid.txt")
 
+    
+    scores_dev = []
+    scores_eval = []
+    for text in X_train["text"]:
+        prediction = model.predict(text, k=2)
+        scores_dev.append(map(lambda x : x[1], sorted(zip(prediction[0],prediction[1]), key=lambda x : x[0])))
 
-
+    for text in X_test["text"]:
+        prediction = model.predict(text, k=2)
+        scores_eval.append(map(lambda x : x[1], sorted(zip(prediction[0],prediction[1]), key=lambda x : x[0])))
+    
     new_features_names= ["embedding_negativity", "embedding_positivity"]
-
-    #lo so, questa cosa è poco leggibile, la migliorerò
-    scores_dev = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_train["text"]], columns= new_features_names)
-    scores_eval = pd.DataFrame([map(lambda x : x[1], sorted(zip(model.predict(text, k=2)[0],model.predict(text, k=2)[1]), key=lambda x : x[0])) for text in X_test["text"]], columns= new_features_names)
+    scores_dev = pd.DataFrame(scores_dev, columns=new_features_names)
+    scores_eval = pd.DataFrame(scores_eval, columns=new_features_names)
     
     #pd.concat
     X_train = pd.DataFrame(np.column_stack([X_train, scores_dev]), columns=X_train.columns.append(scores_dev.columns))
@@ -320,6 +318,5 @@ def normalize(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([pd.DataFram
 
 
 def save_results(y_pred: list, fp: str):
- 
     pd.Series(y_pred, name="Predicted").to_csv(fp, index_label="Id")
     print(f"Resulted saved in {fp}")
