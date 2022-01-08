@@ -82,16 +82,16 @@ overall_schema <- grViz('digraph {
 overall_schema %>%
   export_svg %>% charToRaw %>% rsvg_svg(file="./figures/overall_schema.svg")
 
-cleaninig_schema <- grViz("
+cleaning_schema <- grViz("
   digraph {
   graph [layout=dot, rankdir=LR]
   
-  node [shape=circle, peripheries=2, fontsize=35]
+  node [shape=circle, peripheries=2, fontsize=50, width=3]
   a [label='Text']
   
-  node [shape=box, fixedsize=true, peripheries=1, width=2.2, height=2, style=filled]
+  node [shape=box, fixedsize=true, peripheries=1, width=3.3, height=4, style=filled]
   b [label='Lower\nCase', fillcolor=lightblue]
-  c [label='Expand\nContractions', fontsize=30, fillcolor='#aff28b']
+  c [label='Expand\nContracted\nForms' fillcolor='#aff28b']
   d [label='Convert\nHTML\nEntities', fillcolor='#aff28b']
   e [label='Extract\nURL\nDomain', fillcolor='#aff28b']
   f [label='Remove\nRepetead\nCharacters', fillcolor='#ff8172']
@@ -104,5 +104,6 @@ cleaninig_schema <- grViz("
   a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k
   }
                           ")
-cleaninig_schema %>%
-  export_svg %>% charToRaw %>% rsvg_svg(file="./figures/cleaninig_schema.svg")
+cleaning_schema %>%
+  export_svg %>% charToRaw %>% rsvg_svg(file="./figures/cleaning_schema.svg")
+cleaning_schema
