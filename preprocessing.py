@@ -151,9 +151,10 @@ def add_word_embeddings(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple([p
 
     np.savetxt("train.txt", text_train, fmt="%s")
 
+    #model = fasttext.train_supervised("train.txt")
     model = fasttext.train_supervised("train.txt", epoch =5, wordNgrams=2, bucket = 1003902, dim = 136, 
                                      lr =0.20784007534156418, lrUpdateRate = 100, maxn = 6, minCount = 1, minCountLabel = 0 ,minn = 3, neg = 5,
-                                    seed = 0, t= 0.0001, thread = 15, verbose = 2, ws =5)
+                                   seed = 0, t= 0.0001, thread = 15, verbose = 2, ws =5)
     remove("train.txt")
 
     scores_dev = []
