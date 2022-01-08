@@ -118,7 +118,7 @@ For the first kind of duplicated tweets, no action is required. Those are very c
 Then, we tackled the cleaning of the tweets' text. To properly perform this step, we took into consideration a lot of alternatives. Different elements characterize a Twitter post and we tried to draw every possible bit of information from the text. The tweets' length issue led us to inspect the text in search of an encoding-related problem. We found out that the text extracted seems to be encoded in UTF-8\cite{utf8} but some special symbols were parsed as HTML entities\footnote{Character entities are used to display reserved characters in HTML}. We employed the html library to clean up the text. After that, we lowered the case of the words and we extracted the domain name from the urls contained in the tweets. We exploited two vocabularies\footnote{\textbf{***insert libraries}} to expand into clear words the emoticons and the slang terms. By substituting these pieces of text in addition with some regex to regularize the phrases we obteined a much more coherent and convenient format for the analysis. Ultimately, we applied the lemmatization\cite{lemmatization} to extract the lemma from each word. We preferred lemmatizing to stemming\cite{stemming} in order to preserve the morphology of the words\cite{stemmingVSlemmatizing}.
 \begin{figure}[h]
         \centering
-        \includesvg[width=\columnwidth]{cleaning_schema}
+        \includesvg[width=\columnwidth]{cleaninig_schema}
         \caption{Text cleaning pipeline}
         \label{fig:cleaning_schema}
 \end{figure}
