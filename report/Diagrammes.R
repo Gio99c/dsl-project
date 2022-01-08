@@ -36,7 +36,7 @@ d -> {k l}
 text_schema %>%
   export_svg %>% charToRaw %>% rsvg_svg(file="./figures/text_schema.svg")
 
-overall_schema <- grViz('digraph ninja{
+overall_schema <- grViz('digraph {
   graph [compound = true, rankdir=LR, ranksep=1]
 
   node [fontcolor = black,
@@ -56,7 +56,6 @@ overall_schema <- grViz('digraph ninja{
   struct1:port1 -> g
   struct1:port2 -> b
   struct1:port3 -> c
-  struct1:port4 -> c
   struct1:port5 -> d
   c -> d
   c -> e
@@ -82,4 +81,28 @@ overall_schema <- grViz('digraph ninja{
 
 overall_schema %>%
   export_svg %>% charToRaw %>% rsvg_svg(file="./figures/overall_schema.svg")
-overall_schema
+
+cleaninig_schema <- grViz("
+  digraph {
+  graph [layout=dot, rankdir=LR]
+  
+  node [shape=circle, peripheries=2, fontsize=35]
+  a [label='Text']
+  
+  node [shape=box, fixedsize=true, peripheries=1, width=2.2, height=2, style=filled]
+  b [label='Lower\nCase', fillcolor=lightblue]
+  c [label='Expand\nContractions', fontsize=30, fillcolor='#aff28b']
+  d [label='Convert\nHTML\nEntities', fillcolor='#aff28b']
+  e [label='Extract\nURL\nDomain', fillcolor='#aff28b']
+  f [label='Remove\nRepetead\nCharacters', fillcolor='#ff8172']
+  g [label='Remove\nNumbers', fillcolor='#ff8172']
+  h [label='Expand\nEmoticons', fillcolor='#aff28b']
+  i [label='Convert\nSlang', fillcolor='#aff28b']
+  j [label='Remove\nMentioned\nUsers', fillcolor='#ff8172']
+  k [label='Lemma', fillcolor=lightblue]
+  
+  a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k
+  }
+                          ")
+cleaninig_schema %>%
+  export_svg %>% charToRaw %>% rsvg_svg(file="./figures/cleaninig_schema.svg")
