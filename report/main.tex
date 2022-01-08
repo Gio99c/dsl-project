@@ -34,7 +34,10 @@ christian.montecchiani@studenti.polito.it}
 \maketitle
 
 \begin{abstract}
- 
+%In this report we develop a possible solution for a sentiment analysis problem by means of classification techniques.
+In this report we developed a model that is able to classify the sentiment of a Twitter's tweet.
+We focused on text cleaning and information retrieval within the tweets employing advanced feature extraction techniques.
+We exploited high-performance algorithms that could handle such a big dataset and could accomplish the classification in a reasonable amount of time.
 \end{abstract}
 
 \section{Problem overview}\label{sec:overview}
@@ -106,14 +109,20 @@ The preprocessing step is the core phase of the entire analysis. Here we perform
 
 Afterwards, we addressed the tweet duplication issue. There are three kinds of duplicated tweets:
 \begin{enumerate}
-    \item Same text, different id, same sentiment
-    \item Same text, same id, same sentiment
-    \item Same text, different sentiment
+    \item Same \textit{text}, \textbf{different} \textit{author}, \textbf{same} \textit{sentiment}
+    \item Same \textit{text}, \textbf{same} \textit{author}, \textbf{same} \textit{sentiment}
+    \item Same \textit{text}, \textbf{different} \textit{sentiment}
 \end{enumerate}
-For the first kind of duplicated tweets, no action is required. Those are very common and eventually short sentences that different authors twitted. They share the same sentiment so it enforces the model to learn that those phases belong to one specific class. The second kind are tweets that have been posted more than once by the same author. This could be a mistake or maybe the user wanted to retweet the same post again. Either way, we decided to keep only one copy of the duplicated post. The most controversial kind of duplication is the last one: regardaless of the author, if the same text is labelled differently, then the classifier will be confused on how to handle samples similar to these ones. For this reason we decided to drop all the records with these conflicting properties.
+For the first kind of duplicated tweets, no action is required. Those are very common and eventually short sentences that different authors twitted. They share the same sentiment so it enforces the model to learn that those phrases belong to one specific class. The second kind are tweets that have been posted more than once by the same author. This could be a mistake or maybe the user wanted to retweet the same post again. Either way, we decided to keep only one copy of the duplicated post. The most controversial kind of duplication is the last one: regardaless of the author, if the same text is labelled differently, then the classifier will be confused on how to handle samples similar to these ones. For this reason we decided to drop all the records with these conflicting properties.
 
 Then, we tackled the cleaning of the tweets' text. To properly perform this step, we took into consideration a lot of alternatives. Different elements characterize a Twitter post and we tried to draw every possible bit of information from the text. The tweets' length issue led us to inspect the text in search of an encoding-related problem. We found out that the text extracted seems to be encoded in UTF-8\cite{utf8} but some special symbols were parsed as HTML entities\footnote{Character entities are used to display reserved characters in HTML}. We employed the html library to clean up the text. After that, we lowered the case of the words and we extracted the domain name from the urls contained in the tweets. We exploited two vocabularies\footnote{\textbf{***insert libraries}} to expand into clear words the emoticons and the slang terms. By substituting these pieces of text in addition with some regex to regularize the phrases we obteined a much more coherent and convenient format for the analysis. Ultimately, we applied the lemmatization\cite{lemmatization} to extract the lemma from each word. We preferred lemmatizing to stemming\cite{stemming} in order to preserve the morphology of the words\cite{stemmingVSlemmatizing}.
-Figure \ref{fig:cleaning} shows the cleaning pipeline for the \textit{text} attribute.
+\begin{figure}[h]
+        \centering
+        \includesvg[width=\columnwidth]{cleaning_schema}
+        \caption{Text cleaning pipeline}
+        \label{fig:cleaning_schema}
+\end{figure}
+Figure \ref{fig:cleaning_schema} shows the cleaning pipeline for the \textit{text} attribute.
 
 At this stage, the \textit{text} feature is ready to be processed. We heavily relied on the tools offered by the NLKT library\cite{nlkt} to carry on the analysis. We employed the Vader Sentiment Intensity Analyzer\cite{vader} to gain the relative frequencies of \textit{negative}, \textit{neutral} and \textit{negative} terms. Besides, also the \textit{compound} value is stored, it is a single value summarises the three frequencies. Following, we used the TextBlob library\cite{textblob} to extract additional features: the \textit{subjectivity} score and the \textit{polarity} index. These variables are correlated among them, but they describe the same phenomenon under different point of view and complement each other.
 
