@@ -1,13 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
-from sklearn.experimental import enable_hist_gradient_boosting
-from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier, AdaBoostClassifier
 
-from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
 
 
 
@@ -53,15 +48,6 @@ parameters_HGBC ={
     "warm_start": [True, False]
 
 }
-
-parameters_ada ={
-    "base_estimator": [RandomForestClassifier(), DecisionTreeClassifier(), HistGradientBoostingClassifier()],
-    "n_estimators": np.arange(start=100, stop= 1000, step= 100),
-    "learning_rate": np.arange(start=1, stop=2, step=0.1),
-    "algorithm":["SAMME", "SAMME.R"]
-}
-
-
 
 
 def test_classifier(clf, X_train : pd.DataFrame, X_test : pd.DataFrame, y_train: pd.Series, file_name: str) -> None:
