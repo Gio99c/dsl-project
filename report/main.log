@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.27)  7 JAN 2022 17:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.27)  13 JAN 2022 16:33
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -437,7 +437,14 @@ Package caption Info: wrapfig package is loaded.
 )
 \c@subfigure=\count132
 \c@subtable=\count133
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/svg/svg.sty
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2019/01/01 v2.4 Span multiple rows of a table
+\multirow@colwidth=\skip53
+\multirow@cntb=\count134
+\multirow@dima=\skip54
+\bigstrutjot=\dimen165
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/svg/svg.sty
 Package: svg 2018/11/12 v2.02b (include SVG pictures)
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/koma-script/scrbase.sty
@@ -455,8 +462,8 @@ Package shellesc Info: Unrestricted shell escape enabled on input line 67.
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 )
 \svg@box=\box32
-\c@svg@param@lastpage=\count134
-\c@svg@param@currpage=\count135
+\c@svg@param@lastpage=\count135
+\c@svg@param@currpage=\count136
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/ifplatform/ifplatform.sty
 Package: ifplatform 2017/10/13 v0.4a Testing for the operating system
@@ -650,12 +657,12 @@ Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 )
 (/usr/local/texlive/2019/texmf-dist/tex/latex/csquotes/csquotes.sty
 Package: csquotes 2018/04/13 v5.2d context-sensitive quotations (JAW)
-\csq@reset=\count136
-\csq@gtype=\count137
-\csq@glevel=\count138
-\csq@qlevel=\count139
-\csq@maxlvl=\count140
-\csq@tshold=\count141
+\csq@reset=\count137
+\csq@gtype=\count138
+\csq@glevel=\count139
+\csq@qlevel=\count140
+\csq@maxlvl=\count141
+\csq@tshold=\count142
 \csq@ltx@everypar=\toks22
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/csquotes/csquotes.def
@@ -674,45 +681,45 @@ Package csquotes Info: ... none found.
 
 
 Package csquotes Warning: No multilingual support.
-(csquotes)                Cannot enable multilingual quotes on input line 19.
+(csquotes)                Cannot enable multilingual quotes on input line 20.
 
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 19.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 20.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 20.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    ... okay on input line 20.
 
 -- Lines per column: 56 (exact).
 (/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count142
-\scratchdimen=\dimen165
+\scratchcounter=\count143
+\scratchdimen=\dimen166
 \scratchbox=\box33
-\nofMPsegments=\count143
-\nofMParguments=\count144
+\nofMPsegments=\count144
+\nofMParguments=\count145
 \everyMPshowfont=\toks23
-\MPscratchCnt=\count145
-\MPscratchDim=\dimen166
-\MPnumerator=\count146
-\makeMPintoPDFobject=\count147
+\MPscratchCnt=\count146
+\MPscratchDim=\dimen167
+\MPnumerator=\count147
+\makeMPintoPDFobject=\count148
 \everyMPtoPDFconversion=\toks24
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -732,7 +739,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box34
-Package hyperref Info: Link coloring OFF on input line 19.
+Package hyperref Info: Link coloring OFF on input line 20.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -740,11 +747,11 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count148
+\c@section@level=\count149
 )
-LaTeX Info: Redefining \ref on input line 19.
-LaTeX Info: Redefining \pageref on input line 19.
-LaTeX Info: Redefining \nameref on input line 19.
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Info: Redefining \nameref on input line 20.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
@@ -752,35 +759,21 @@ LaTeX Info: Redefining \nameref on input line 19.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 43.
+LaTeX Font Info:    Try loading font information for U+msa on input line 47.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 43.
+LaTeX Font Info:    Try loading font information for U+msb on input line 47.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-LaTeX Warning: Citation `snowflake' on page 1 undefined on input line 49.
-
-Package svg Info: Calling Inkscape on input line 52.
-runsystem(inkscape -z -D --export-latex  --file="./figures/snowflake.svg" --exp
-ort-pdf="snowflake_svg-tex.pdf" )...executed.
-
-runsystem(mkdir -p "./svg-inkscape/")...executed.
-
-runsystem(mv "snowflake_svg-tex.pdf" "./svg-inkscape/snowflake_svg-tex.pdf")...
-executed.
-
-runsystem(mv "snowflake_svg-tex.pdf_tex" "./svg-inkscape/snowflake_svg-tex.pdf_
-tex")...executed.
-
 Package svg Info: Last page of `./svg-inkscape/snowflake_svg-tex.pdf' is 1 on i
-nput line 52.
+nput line 56.
+
 (./svg-inkscape/snowflake_svg-tex.pdf_tex
-<./svg-inkscape/snowflake_svg-tex.pdf, id=37, page=1, 484.91513pt x 35.55276pt>
+<./svg-inkscape/snowflake_svg-tex.pdf, id=38, page=1, 484.91513pt x 35.55276pt>
 
 File: ./svg-inkscape/snowflake_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/snowflake_svg-tex.pdf, page 1>
@@ -788,29 +781,27 @@ Package pdftex.def Info: ./svg-inkscape/snowflake_svg-tex.pdf , page1 used on i
 nput line 56.
 (pdftex.def)             Requested size: 252.0pt x 18.47614pt.
 )
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 59.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 64.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 Package svg Info: Last page of `./svg-inkscape/charcount_svg-tex.pdf' is 1 on i
-nput line 66.
+nput line 71.
 
 (./svg-inkscape/charcount_svg-tex.pdf_tex
-<./svg-inkscape/charcount_svg-tex.pdf, id=42, page=1, 736.50616pt x 433.62pt>
+<./svg-inkscape/charcount_svg-tex.pdf, id=43, page=1, 736.50616pt x 433.62pt>
 File: ./svg-inkscape/charcount_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/charcount_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/charcount_svg-tex.pdf , page1 used on i
 nput line 56.
 (pdftex.def)             Requested size: 252.0pt x 148.36177pt.
 )
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
 Package svg Info: Last page of `./svg-inkscape/unbalanced_svg-tex.pdf' is 1 on 
-input line 72.
+input line 77.
+
 (./svg-inkscape/unbalanced_svg-tex.pdf_tex
-<./svg-inkscape/unbalanced_svg-tex.pdf, id=44, page=1, 722.7pt x 578.16pt>
+<./svg-inkscape/unbalanced_svg-tex.pdf, id=45, page=1, 722.7pt x 578.16pt>
 File: ./svg-inkscape/unbalanced_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/unbalanced_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/unbalanced_svg-tex.pdf , page1 used on 
@@ -820,10 +811,7 @@ input line 56.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+[1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
  <./svg-inkscape/snowflake_svg-tex.pdf> <./svg-inkscape/charcount_svg-tex.pdf
@@ -831,26 +819,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/charcount_svg
 -tex.pdf): PDF inclusion: multiple pdfs with page group included in a single pa
 ge
-> <./svg-inkscape/unbalanced_svg-tex.pdf
-
-pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/unbalanced_sv
-g-tex.pdf): PDF inclusion: multiple pdfs with page group included in a single p
-age
 >]
-
-LaTeX Warning: Citation `sentiment_analysis' on page 2 undefined on input line 
-88.
-
-
-LaTeX Warning: Citation `wordembeddings' on page 2 undefined on input line 90.
-
-
-LaTeX Warning: Citation `fasttext' on page 2 undefined on input line 90.
-
 Package svg Info: Last page of `./svg-inkscape/overall_schema_svg-tex.pdf' is 1
- on input line 94.
-(./svg-inkscape/overall_schema_svg-tex.pdf_tex
-<./svg-inkscape/overall_schema_svg-tex.pdf, id=166, page=1, 1004.73807pt x 697.
+ on input line 100.
+ (./svg-inkscape/overall_schema_svg-tex.pdf_tex
+<./svg-inkscape/overall_schema_svg-tex.pdf, id=138, page=1, 1004.73807pt x 697.
 60625pt>
 File: ./svg-inkscape/overall_schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/overall_schema_svg-tex.pdf, page 1>
@@ -858,105 +831,71 @@ Package pdftex.def Info: ./svg-inkscape/overall_schema_svg-tex.pdf , page1 used
  on input line 56.
 (pdftex.def)             Requested size: 252.0pt x 174.96529pt.
 )
+Package svg Info: Last page of `./svg-inkscape/cleaning_schema_svg-tex.pdf' is 
+1 on input line 124.
 
-LaTeX Warning: Citation `fasttextclassifier' on page 2 undefined on input line 
-99.
+(./svg-inkscape/cleaning_schema_svg-tex.pdf_tex
+<./svg-inkscape/cleaning_schema_svg-tex.pdf, id=147, page=1, 3385.14688pt x 371
+.3875pt>
+File: ./svg-inkscape/cleaning_schema_svg-tex.pdf Graphic file (type pdf)
+<use ./svg-inkscape/cleaning_schema_svg-tex.pdf, page 1>
+Package pdftex.def Info: ./svg-inkscape/cleaning_schema_svg-tex.pdf , page1 use
+d on input line 56.
+(pdftex.def)             Requested size: 252.0pt x 27.64317pt.
+) [2 <./svg-inkscape/unbalanced_svg-tex.pdf> <./svg-inkscape/overall_schema_svg
+-tex.pdf
 
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/overall_schem
+a_svg-tex.pdf): PDF inclusion: multiple pdfs with page group included in a sing
+le page
+> <./svg-inkscape/cleaning_schema_svg-tex.pdf
 
-LaTeX Warning: Citation `utf8' on page 2 undefined on input line 114.
-
-
-LaTeX Warning: Citation `lemmatization' on page 2 undefined on input line 114.
-
-
-LaTeX Warning: Citation `stemming' on page 2 undefined on input line 114.
-
-
-LaTeX Warning: Citation `stemmingVSlemmatizing' on page 2 undefined on input li
-ne 114.
-
-
-LaTeX Warning: Reference `fig:cleaning' on page 2 undefined on input line 115.
-
-[2 <./svg-inkscape/overall_schema_svg-tex.pdf>]
-
-LaTeX Warning: Citation `nlkt' on page 3 undefined on input line 117.
-
-
-LaTeX Warning: Citation `vader' on page 3 undefined on input line 117.
-
-
-LaTeX Warning: Citation `textblob' on page 3 undefined on input line 117.
-
-<./figures/word_cloud.png, id=194, 433.10379pt x 300.23022pt>
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./svg-inkscape/cleaning_sche
+ma_svg-tex.pdf): PDF inclusion: multiple pdfs with page group included in a sin
+gle page
+>]
+<./figures/word_cloud.png, id=222, 437.02701pt x 301.67563pt>
 File: ./figures/word_cloud.png Graphic file (type png)
 <use ./figures/word_cloud.png>
-Package pdftex.def Info: ./figures/word_cloud.png  used on input line 122.
-(pdftex.def)             Requested size: 252.0pt x 174.68796pt.
+Package pdftex.def Info: ./figures/word_cloud.png  used on input line 137.
+(pdftex.def)             Requested size: 252.0pt x 173.95467pt.
 
-LaTeX Warning: Citation `word_cloud' on page 3 undefined on input line 123.
-
-
-LaTeX Warning: Citation `word_cloud' on page 3 undefined on input line 123.
+Underfull \hbox (badness 1675) in paragraph at lines 142--144
+[]\OT1/ptm/m/n/10 Finally, we lever-aged the word em-bed-dings ap-proach
+ []
 
 Package svg Info: Last page of `./svg-inkscape/text_schema_svg-tex.pdf' is 1 on
- input line 129.
+ input line 150.
 (./svg-inkscape/text_schema_svg-tex.pdf_tex
-<./svg-inkscape/text_schema_svg-tex.pdf, id=197, page=1, 411.45123pt x 470.7548
+<./svg-inkscape/text_schema_svg-tex.pdf, id=228, page=1, 411.45123pt x 470.7548
 2pt>
 File: ./svg-inkscape/text_schema_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/text_schema_svg-tex.pdf, page 1>
 Package pdftex.def Info: ./svg-inkscape/text_schema_svg-tex.pdf , page1 used on
  input line 56.
 (pdftex.def)             Requested size: 252.0pt x 288.32368pt.
-)
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: Citation `minmax' on page 3 undefined on input line 135.
-
-
-LaTeX Warning: Citation `rf' on page 3 undefined on input line 139.
-
-
-LaTeX Warning: Citation `bnb' on page 3 undefined on input line 140.
-
-
-LaTeX Warning: Citation `bernoulli' on page 3 undefined on input line 140.
-
-
-LaTeX Warning: Citation `svc' on page 3 undefined on input line 141.
-
-
-LaTeX Warning: Citation `histgtb' on page 3 undefined on input line 142.
-
-
-LaTeX Warning: Citation `gtb' on page 3 undefined on input line 142.
-
-
-Underfull \hbox (badness 1881) in paragraph at lines 142--143
+) [3 <./figures/word_cloud.png> <./svg-inkscape/text_schema_svg-tex.pdf>]
+Underfull \hbox (badness 1881) in paragraph at lines 164--165
 []\OT1/ptm/b/n/10 Histogram-based Gra-di-ent Boost-ing Clas-si-fi-ca-tion
  []
 
 
-Underfull \hbox (badness 2213) in paragraph at lines 142--143
-\OT1/ptm/b/n/10 Tree [?]\OT1/ptm/m/n/10 : high-performance im-ple-men-ta-tion f
-or big
+Overfull \hbox (3.61444pt too wide) in paragraph at lines 198--211
+[][] 
  []
 
 
-LaTeX Warning: Reference `tab:results' on page 3 undefined on input line 144.
+Overfull \hbox (8.94223pt too wide) in paragraph at lines 218--224
+[][] 
+ []
 
-[3 <./figures/word_cloud.png> <./svg-inkscape/text_schema_svg-tex.pdf>]
+(./main.bbl [4]
+Underfull \hbox (badness 10000) in paragraph at lines 33--37
+[]$\OT1/ptm/m/n/8 https : / / en . wikipedia . org / w / index . php ? title = 
+UTF-[]8 & oldid = 1064072349$[],
+ []
 
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 152.
-
-
-LaTeX Warning: Citation `scikit-learn' on page 4 undefined on input line 169.
-
-(./main.bbl)
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -968,41 +907,36 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 173.
-[4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 173.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 260.
+[5]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 260.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 173.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 173.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 260.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 260.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: C06E0BA5189FFEF8BB5D2ECE18821A8C;433.
-
-
-LaTeX Warning: There were undefined references.
-
+(rerunfilecheck)             Checksum: 700FD4839B7BEE902E0100991EC68CFB;434.
  ) 
 Here is how much of TeX's memory you used:
- 11067 strings out of 492616
- 172835 string characters out of 6129481
- 309928 words of memory out of 5000000
- 14754 multiletter control sequences out of 15000+600000
- 45470 words of font info for 91 fonts, out of 8000000 for 9000
+ 11166 strings out of 492616
+ 174588 string characters out of 6129481
+ 318572 words of memory out of 5000000
+ 14816 multiletter control sequences out of 15000+600000
+ 45985 words of font info for 93 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,10n,54p,1277b,598s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,11n,54p,1525b,598s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/tex
-live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
-e/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/
-2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/20
-19/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2019/texmf
--dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/font
-s/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/u
-rw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/u
-tmri8a.pfb>
-Output written on main.pdf (4 pages, 4925109 bytes).
+exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
+xlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
+ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
+e/2019/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/
+fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/typ
+e1/urw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/tim
+es/utmri8a.pfb>
+Output written on main.pdf (5 pages, 5058325 bytes).
 PDF statistics:
- 255 PDF objects out of 1000 (max. 8388607)
- 194 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
- 120 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 331 PDF objects out of 1000 (max. 8388607)
+ 264 compressed objects within 3 object streams
+ 58 named destinations out of 1000 (max. 500000)
+ 130 words of extra memory for PDF output out of 10000 (max. 10000000)
 
