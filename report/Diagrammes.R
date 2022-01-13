@@ -56,6 +56,7 @@ overall_schema <- grViz('digraph {
   struct1:port1 -> g
   struct1:port2 -> b
   struct1:port3 -> c
+  struct1:port4 -> d
   struct1:port5 -> d
   c -> d
   c -> e
@@ -94,14 +95,13 @@ cleaning_schema <- grViz("
   c [label='Expand\nContracted\nForms' fillcolor='#aff28b']
   d [label='Convert\nHTML\nEntities', fillcolor='#aff28b']
   e [label='Extract\nURL\nDomain', fillcolor='#aff28b']
-  f [label='Remove\nRepetead\nCharacters', fillcolor='#ff8172']
+  f [label='Remove\nRepeated\nCharacters', fillcolor='#ff8172']
   g [label='Remove\nNumbers', fillcolor='#ff8172']
-  h [label='Expand\nEmoticons', fillcolor='#aff28b']
-  i [label='Convert\nSlang', fillcolor='#aff28b']
-  j [label='Remove\nMentioned\nUsers', fillcolor='#ff8172']
+  h [label='Replace\nEmoticons', fillcolor='#aff28b']
+  i [label='Replace\nSlangs', fillcolor='#aff28b']
   k [label='Lemma', fillcolor=lightblue]
   
-  a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k
+  a -> b -> c -> d -> e -> f -> g -> h -> i -> k
   }
                           ")
 cleaning_schema %>%
