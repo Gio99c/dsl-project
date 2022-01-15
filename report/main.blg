@@ -7,45 +7,45 @@ Warning--empty journal in snowflake
 Warning--empty year in snowflake
 Warning--empty journal in vader
 Warning--can't use both volume and number fields in bnb
-You've used 26 entries,
+You've used 25 entries,
             1876 wiz_defined-function locations,
-            634 strings with 8581 characters,
-and the built_in function-call counts, 7669 in all, are:
-= -- 695
-> -- 405
+            627 strings with 8257 characters,
+and the built_in function-call counts, 7291 in all, are:
+= -- 658
+> -- 391
 < -- 0
-+ -- 145
-- -- 119
-* -- 580
-:= -- 1111
-add.period$ -- 28
-call.type$ -- 26
-change.case$ -- 24
++ -- 140
+- -- 115
+* -- 552
+:= -- 1063
+add.period$ -- 27
+call.type$ -- 25
+change.case$ -- 23
 chr.to.int$ -- 0
-cite$ -- 30
-duplicate$ -- 364
-empty$ -- 698
-format.name$ -- 119
-if$ -- 1825
+cite$ -- 29
+duplicate$ -- 343
+empty$ -- 661
+format.name$ -- 115
+if$ -- 1732
 int.to.chr$ -- 0
-int.to.str$ -- 26
-missing$ -- 24
-newline$ -- 84
-num.names$ -- 28
-pop$ -- 111
+int.to.str$ -- 25
+missing$ -- 23
+newline$ -- 81
+num.names$ -- 27
+pop$ -- 105
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 253
+skip$ -- 238
 stack$ -- 0
-substring$ -- 477
-swap$ -- 145
+substring$ -- 445
+swap$ -- 136
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 4
-while$ -- 72
-width$ -- 28
-write$ -- 247
+while$ -- 68
+width$ -- 27
+write$ -- 237
 (There were 4 warnings)

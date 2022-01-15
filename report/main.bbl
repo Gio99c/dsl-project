@@ -22,13 +22,6 @@ A.~Joulin, E.~Grave, P.~Bojanowski, M.~Douze, H.~J{\'e}gou, and T.~Mikolov,
   ``Fasttext.zip: Compressing text classification models,'' {\em arXiv preprint
   arXiv:1612.03651}, 2016.
 
-\bibitem{fasttextclassifier}
-A.~Joulin, E.~Grave, P.~Bojanowski, and T.~Mikolov, ``Bag of tricks for
-  efficient text classification,'' in {\em Proceedings of the 15th Conference
-  of the European Chapter of the Association for Computational Linguistics:
-  Volume 2, Short Papers}, pp.~427--431, Association for Computational
-  Linguistics, April 2017.
-
 \bibitem{utf8}
 {Wikipedia contributors}, ``Utf-8 --- {Wikipedia}{,} the free encyclopedia.''
   \url{https://en.wikipedia.org/w/index.php?title=UTF-8&oldid=1064072349},
