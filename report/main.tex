@@ -35,7 +35,6 @@ christian.montecchiani@studenti.polito.it}
 \maketitle
 
 \begin{abstract}
-%In this report we develop a possible solution for a sentiment analysis problem by means of classification techniques.
 In this report we developed a model that is able to classify the sentiment of a Twitter's tweet.
 We focused on text cleaning and information retrieval within the tweets employing advanced feature extraction techniques.
 We exploited high-performance algorithms that could handle such a big dataset and could accomplish the classification in a reasonable amount of time.
@@ -45,12 +44,11 @@ We exploited high-performance algorithms that could handle such a big dataset an
 The objective of the competition was to build a model that is able to classify whether a tweet contains positive or negative sentiments. The dataset provided is arranged as follow:
 \begin{itemize}
     \item A \textbf{development} set composed by 224,994 records of tweets. Each sample has six different features, including the \textit{sentiment} attribute that is the target of the classification.
-    \item A \textbf{evaluation} set consisting of 74,999 samples. It does not contain the target variable.
+    \item A \textbf{evaluation} set consisting of 74,999 samples. Its dimension is one-third of the development set and it does not feature the target variable.
 \end{itemize}
-%\textbf{***move}The dataset is quite large, so the time required to manage the operations on the data should be taken into account because it could be not trivial. It is essential to retrieve some meaningful information of the data by exploiting its features.
 Every sample is characterized by:
 \begin{itemize}
-    \item \textit{ids}: the unique identifier of the tweet. It is represented by a progressive integer number that is related to the timestamp of the tweet. By digging in the past twitter documentation, we found out that the tweet id is generated with a snowflake format\cite{snowflake}, invented by Twitter for the generation of sequential ids for their tweets. The timestamp is encoded within the id.
+    \item \textit{ids}: the unique identifier of the tweet. It is represented by a progressive integer number that is related to the timestamp of the tweet. By digging in the past Twitter documentation, we found out that the tweet id is generated in a snowflake format\cite{snowflake}, invented by Twitter for the generation of sequential ids for their tweets. The timestamp is encoded within the id as shown in Figure \ref{fig:snowflake}.
     \begin{figure}[h]
         \centering
         \includesvg[width=\columnwidth]{snowflake}
@@ -59,12 +57,11 @@ Every sample is characterized by:
 \end{figure}
     \item \textit{date}: the timestamp of each tweet. The date is encoded as a string with the format:
     $$weekday \quad month \quad day \quad hour:min:sec \quad tz \quad year$$
-    %From this schema, the information can be easily extracted and exploited to train the model.
-    The dates in the dataset range from April 6 to June 25 of 2009. %Knowing the temporal ranges will help during the preprocessing phase.
-    \item \textit{flag}: a string whose significance is unsure. It is present in the whole dataset with the unique value of \texttt{NO\_QUERY}. %Given its absence of meaning, this feature will be removed without a second thought, but it is possible that it would report the query used to retrieve the tweets when they were extracted using some Twitter APIs.
-    \item \textit{user}: the username of the creator of the tweet. Even though there are almost 225 thousand tweets, there are only 10,647 different usernames. %Therefore, on average, the users are very active and they have probably posted several tweets in this period.
-    \item \textit{text}: the text of the tweet. This is the core part of the analysis, it embodies a lot of insights that can be extracted and analyzed to retrieve the overall polarity of the tweet's sentiments. In 2009 the maximum length of a tweet was 140 characters\cite{tweet_lenght}. However Figure \ref{fig:charcount}, shows that some tweets exceed this threshold, so there are likely issues with the encoding of the text extracted.
-    \item \textit{sentiment}: the target variable of the classification. It assumes two possible integer values: 0 and 1 that represent respectively negative and positive sentiments. The dataset is fairly unbalanced, as shown in figure \ref{fig:unbalanced}, there are more positive sentiments than negative ones.
+    The dates in the dataset range from April 6 to June 25 of 2009.
+    \item \textit{flag}: a string whose significance is unsure. It is featured in the whole dataset with the unique value of \texttt{NO\_QUERY}. Given its absence of meaning, this feature will be removed without a second thought, but it is possible that it would report the query used to retrieve the tweets when they were extracted using some Twitter APIs.
+    \item \textit{user}: the username of the creator of the tweet. Even though there are almost 225 thousand tweets, there are only 10,647 different usernames.
+    \item \textit{text}: the text of the tweet. This is the core part of the analysis, it embodies a lot of insights that can be extracted and analyzed to retrieve the overall polarity of the tweet's sentiments. In 2009 the maximum length of a tweet was 140 characters\cite{tweet_lenght}. However Figure \ref{fig:charcount}, shows that some tweets exceed this threshold, so it is likely to have issues with the encoding of the text extracted.
+    \item \textit{sentiment}: the target variable of the classification. It assumes two possible integer values: 0 and 1 that represent respectively negative and positive sentiments. The dataset is fairly unbalanced, as shown in Figure \ref{fig:unbalanced}: there are more positive sentiments than negative ones.
 \end{itemize}
 \begin{figure}[h]
         \centering
@@ -80,8 +77,6 @@ Every sample is characterized by:
 \end{figure}
 The dataset does not feature any missing value, but it contains redundant information that is useless for the analysis.
 
-In Section \ref{sec:approach} we will assess what are the most relevant features to carry on the classification and how we will extract the relevant information that lies within each feature.
-
 \section{Proposed approach}\label{sec:approach}
 The preprocessing was characterized by the features extraction and the text mining phases.
 
@@ -91,7 +86,7 @@ We decided to extract the time-related information from the \textit{date} attrib
 Although the \textit{date} attribute could hide some useful insights about the sentiment of the tweet, the major knowledge lies within the \textit{text} attribute. The information extraction from this feature can be performed in different ways and with different processes. We decided to tackle the problem from different points of view and we managed to embed all this data into the model. Firstly, we cleaned up the tweets' text, then we exploited the text performing:
 \begin{itemize}
     \item A \textbf{Sentiment Intensity Analysis}\cite{sentiment_analysis} on the text, obtaining new features on the polarization of the sentiments.
-    \item A \textbf{TF-DF}%\footnote{Term Frequency - Document Frequency. The tf-df of term $t$ in document $d$ of collection $D$ is computed as: $$tfdf(t) = freq(t,d) * \log(freq(t,D)$$}
+    \item A \textbf{TF-DF} %\footnote{Term Frequency - Document Frequency. The tf-df of term $t$ in document $d$ of collection $D$ is computed as: $$tfdf(t) = freq(t,d) * \log(freq(t,D)$$}
     of the text in order to get the words that mainly influence the sentiments of the tweets.
     \item A \textbf{Word Embeddings}\cite{wordembeddings} approach with the FastText\cite{fasttext} library to retrieve the morphological relationships between the words in a sentence.
 \end{itemize}
@@ -102,13 +97,13 @@ Although the \textit{date} attribute could hide some useful insights about the s
         \label{fig:overall_schema}
 \end{figure}
 Figure \ref{fig:overall_schema} shows a summary of our approach.
-The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with a F1-score\footnote{The F1-score is the harmonic mean of the precision and recall therefore it is defined for a single class. With macro F1-score we refer to the mean of all classes' F1-scores.}
-higher than 0.8. This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification\cite{fasttextclassifier} into our dataset. 
+The last technique resulted in a very powerful tool, that is able, on its own, to perform the classification of the sentiment of the evaluation set with a macro F1-score\footnote{The F1-score is the harmonic mean of the precision and recall therefore it is defined for a single class. With macro F1-score we refer to the mean of all classes' F1-scores.}
+higher than 0.8. %This was our baseline for the development of the model, and we accomplished higher performance by integrating the likelihoods of the FastText supervised learning classification\cite{fasttextclassifier} into our dataset. 
 
-Sections \ref{sec:preprocessing} and \ref{sec:model} will dig into the details of the three different text mining techniques and some comments about the NLP can be found in the Discussion Section \ref{sec:discussion} of the paper.
+%Sections \ref{sec:preprocessing} and \ref{sec:model} will dig into the details of the three different text mining techniques and some comments about the NLP can be found in the Discussion Section \ref{sec:discussion} of the paper.
 
 \subsection{Preprocessing}\label{sec:preprocessing}
-The preprocessing step is the core phase of the entire analysis. Here we performed the extraction, transformation and normalization of the features. As discussed in Section \ref{sec:approach}, we extracted from the \textit{date} attribute all the relevant information and we discarded the properties that are redundant like \textit{year}, \textit{timezone} and \textit{flag}. Then we decided to add a new feature based of the number of characters of the tweet. The new \textit{char\_count} attribute is useful to troubleshoot the tweets' texts that are longer than 140 characters and it is also valuable for the classification itself.
+The preprocessing step is the core phase of the entire analysis. Here we performed the extraction, transformation and normalization of the features. As discussed in Section \ref{sec:approach}, we extracted from the \textit{date} attribute all the relevant information and we discarded the properties that are redundant like \textit{year}, \textit{timezone} and \textit{flag}. Then we decided to add a new feature based on the number of characters of the tweet. The new \textit{char\_count} attribute is useful to troubleshoot the tweets' texts that are longer than 140 characters and it is also valuable for the classification itself.
 
 Afterwards, we addressed the tweet duplication issue. There are three kinds of duplicated tweets:
 \begin{enumerate}
@@ -129,7 +124,7 @@ Then, we tackled the cleaning of the tweets' text. To properly perform this step
 
 Figure \ref{fig:cleaning_schema} shows the cleaning pipeline for the \textit{text} attribute.
 
-At this stage, the \textit{text} feature is ready to be processed. We heavily relied on the tools offered by the NLKT library\cite{nlkt} to carry on the analysis. We employed the Vader Sentiment Intensity Analyzer\cite{vader} to gain the relative frequencies of \textit{negative}, \textit{neutral} and \textit{negative} terms. Besides, also the \textit{compound} value is stored, which is a single value that summarises the three frequencies. Following, we used the TextBlob library\cite{textblob} to extract additional features: the \textit{subjectivity} score and the \textit{polarity} index. These variables are correlated among them, but they describe the same phenomenon under different point of view and complement each other.
+At this stage, the \textit{text} feature is ready to be processed. We heavily relied on the tools offered by the NLKT library\cite{nlkt} to carry on the analysis. We employed the Vader Sentiment Intensity Analyzer\cite{vader} to gain the relative frequencies of \textit{positive}, \textit{neutral} and \textit{negative} terms. Besides, also the \textit{compound} value is stored, which is a single value that summarises the three frequencies. Following, we used the TextBlob library\cite{textblob} to extract additional features: the \textit{subjectivity} score and the \textit{polarity} index. These variables are correlated among them, but they describe the same phenomenon under different points of view and complement each other.
 
 Going forward, we applied a TF-DF to extract words with a relative high minimum support. Our aim was to retrieve the words that were present in a lot of tweets and which meaning was heavily polarized toward one class. In this case, we did not use a normal stop words vocabulary, because there are a lot of common term that are very important for the classification, like the negations. So we created a custom vocabulary that contained only conjunctions and some adverbs. The most frequent word resulting from the TF-DF are shown in Figure \ref{fig:word_cloud}.
 \begin{figure}[h]
@@ -140,9 +135,8 @@ Going forward, we applied a TF-DF to extract words with a relative high minimum 
 \end{figure}
 
 Finally, we leveraged the word embeddings approach through Meta's FastText library. %The vocabulary was built on top of the tweets of the development set. The autotuning feature of the library allowed us to treat the neural network underneath the facade as a black box. We split the development data into training and validation and the model tuned itself by maximizing the resulting F1-score.
-One of the strengths of this technique is that it does not suffer the presence of unfamiliar terms, because it treats the words as multi-dimensional vectors. The output of the neural network is a prediction and the softmax likelihood for each class. We extracted these probabilities and we integrated them into the dataset.
+One of the strengths of this technique is that it does not suffer the presence of unfamiliar terms, because it treats the words as multi-dimensional vectors. The outputs of the neural network are the predictions and the softmax likelihoods for each class. We extracted these probabilities and we integrated them into the dataset.
 
-%Add date removal
 
 We tried to operate with the \textit{user} attribute to retrieve some useful information within it. We thought that due to the relative low cardinality of this attribute (only 10,000 different usernames) the tweets posted by the same author may reflect its personality, thus it is likely that a sentiment is predominant to the other one. Nonetheless, the One-Hot-Encoding\cite{ohe} of this features would have resulted into a huge dimensionaly increase of the dataset. So, we chose to incorporate the user author of the post at the beginning of the text of the tweet. The text already contains mentioned user whose name is preceded by an at-sign (@). In this way, the word embedding classification will retrieve information about the author of the post like if he was mentioned within it.
 \begin{figure}[h]
@@ -184,36 +178,34 @@ To test the effectiveness of our preprocessing, we tried to test the performance
 \caption{Results of the model selection phase.}
 \label{tab:techniques}
 \end{table}
-As it is possible to see in Table \ref{tab:techniques}, at first we applied only the sentiment extraction technique, then we joined it with the TF-DF outcomes and in the last trial, we added the word embeddings' likelihoods into the equation. It is possible to see an increase in the performance by matching the features. The highest score is reached by bringing together all the extracted features with the different methods.
+As it is possible to see in Table \ref{tab:techniques}, at first we applied only the sentiment extraction technique, then we joined it with the TF-DF outcomes and in the last trial we added the word embeddings' likelihoods into the equation. It is possible to see an increase in the performance by matching the features. The highest score is reached by bringing together all the extracted features with the different methods.
 
-%During this phase, we exploited the Random Forest feature importances to understand what are the most relevant features upon which the algorithm is splitting the samples. Accordingly to our results, we found out that the most significant attributes are the likelihood resulting by the word embeddings classification, following there are the sentiment features and lastly some very polarized word coming from the TF-DF. We also discovered that the \textit{ids} attribute was always more relevant than the feature extracted on the date, thus we decided to remove those features and leave only the id.
-
-
+During this phase, we exploited the Random Forest feature importances to understand what are the most relevant features upon which the algorithm is splitting the samples. Accordingly to our results, we found out that the most significant attributes are the likelihood resulting by the word embeddings classification, following there are the sentiment features and lastly some very polarized word coming from the TF-DF. We also discovered that the \textit{ids} attribute was always more relevant than the features extracted from the date. However, we decided to keep those features because their relevance was still high.
 
 \subsection{Hyperparameters tuning}\label{sec:hypertuning}
-From the model selection phase, the best dataset turned out to be the \textit{ word embedding} + \textit{sentiment extraction} + \textit{TF-DF}, therefore the models have been working with it.
+From the model selection phase, the best dataset turned out to be the \textit{word embedding} + \textit{sentiment extraction} + \textit{TF-DF}, therefore the models have been working with it.
 
-We decided to fine tuning just the two best performing models from Table \ref{tab:techniques}: \textbf{Random Forest Classifier} and \textbf{Histogram-based Gradient Boosting Classification Tree}.
+We decided to tune just the two best performing models from Table \ref{tab:techniques}: \textbf{Random Forest Classifier} and \textbf{Histogram-based Gradient Boosting Classification Tree}.
 \begin{table}[h]
-\begin{tabular}{@{}ll@{}}
-\toprule
-\multicolumn{1}{c}{\textbf{Model}}                        & \multicolumn{1}{c}{\textbf{Parameters}}           \\ \midrule
-\multicolumn{1}{c}{\multirow{4}{*}{Random Forest Class.}} & max\_features= {[}"log2", "sqrt"{]}               \\
-\multicolumn{1}{c}{}                                      & criterion = {[}"gini", "entropy"{]}               \\
-\multicolumn{1}{c}{}                                      & min\_samples\_leaf = {[}10, 20, 30, 40, 50, 60{]} \\
-\multicolumn{1}{c}{}                                      & min\_samples\_split ={[}2,3,4,5,6,7,8,9{]}        \\ \midrule
-\multirow{5}{*}{Hist Gradient Boosting Class.}            & max\_iter = {[}150,200{]}                         \\
-                                                          & max\_leaf\_nodes = {[}20,30,40, None{]}           \\
-                                                          & min\_samples\_leaf = {[}2,4,10{]}                 \\
-                                                          & early\_stopping = {[} True, False{]}              \\
-                                                          & l2\_regularization = {[}0, 0.1, 0.2, 0.3{]}       \\ \bottomrule
+\begin{tabular}{ccc}
+\hline
+\textbf{Classifier}                     & \textbf{Parameters}          & \textbf{Values}            \\ \hline
+\multirow{4}{*}{Random Forest}          & \textit{max\_features}       & \{log2, sqrt\}             \\
+                                        & \textit{criterion}           & \{gini, entropy\}          \\
+                                        & \textit{min\_samples\_leaf}  & \{10, 20, 30, 40, 50, 60\} \\
+                                        & \textit{min\_samples\_split} & \{2, 3, 4, 5, 6, 7, 8, 9\} \\ \hline
+\multirow{5}{*}{Hist Gradient Boosting} & \textit{max\_iter}           & \{150, 200\}               \\
+                                        & \textit{max\_leaf\_nodes}    & \{None, 20, 30, 40\}       \\
+                                        & \textit{min\_samples\_leaf}  & \{2, 4, 10\}               \\
+                                        & \textit{early\_stopping}     & \{True, False\}            \\
+                                        & \textit{l2\_regularization}  & \{0, 0.1, 0.2, 0.3\}       \\ \hline
 \end{tabular}
 \caption{Hyperparameters configuration considered}
 \label{tab:hypertuning}
 \end{table}
 The hyperparameters that we have taken into account for the tuning phase are reported in Table \ref{tab:hypertuning}.
 
-To tune our models we used a hyperparameter optimization technique faster than the Grid Search, called Halving Grid Search\cite{halving}. It tries all the candidates with a small amount of records of the training set and iteratively selects the best candidates, using more and more records\cite{halving_explanation}. To highlight the speed of the this technique we employed the same parameters grid with three folds. The results are exposed in Table \ref{tab:tuning_tech}
+To tune our models we used a hyperparameter optimization technique faster than the Grid Search, called Halving Grid Search\cite{halving}. It tries all the candidates with a small amount of records of the training set and iteratively selects the best candidates, using more and more records\cite{halving_explanation}. To highlight the speed of this technique we employed the same parameters grid with three folds. The results are exposed in Table \ref{tab:tuning_tech}
 \begin{table}[h]
 \begin{tabular}{@{}llll@{}}
 \toprule
@@ -230,19 +222,19 @@ Grid Search         & 4h 23m 5s & 0,9039             & 0,845             \\ \bot
 \section{Results}\label{sec:results}
 In this section are reported the main outcomes of the hyperparameters tuning phase.
 \begin{table}[h]
-\begin{tabular}{@{}lll@{}}
+\begin{tabular}{@{}cccc@{}}
 \toprule
-\textbf{Classifier} & \textbf{Hyperparameters}               & \textbf{F1-Score} \\ \midrule
-\multirow{4}{*}{Random Forest}               & n\_estimators = 500 & \multirow{4}{*}{0,845} \\
-           & max\_features= "log2"         &          \\
-           & min\_samples\_leaf = 10       &          \\
-           & min\_samples\_split =9        &          \\ \midrule
-\multirow{6}{*}{Hist Gradient Boosting Tree} & max\_iter = 150     & \multirow{6}{*}{0,846} \\
-           & max\_leaf\_nodes = 30         &          \\
-           & min\_samples\_leaf = 4        &          \\
-           & loss = "binary\_crossentropy" &          \\
-           & early\_stopping = False       &          \\
-           & l2\_regularization = 0.3      &          \\ \bottomrule
+\textbf{Classifier}                          & \textbf{Parameters} & \textbf{Values} & \textbf{F1-Score}      \\ \midrule
+\multirow{4}{*}{Random Forest}               & n\_estimators       & 500             & \multirow{4}{*}{0,845} \\
+                                             & max\_features       & log2            &                        \\
+                                             & min\_samples\_leaf  & 10              &                        \\
+                                             & min\_samples\_split & 9               &                        \\ \midrule
+\multirow{6}{*}{Hist Gradient Boosting} & max\_iter           & 150             & \multirow{6}{*}{0,846} \\
+                                             & max\_leaf\_nodes    & 30              &                        \\
+                                             & min\_samples\_leaf  & 4               &                        \\
+                                             & loss                & binary\_entropy &                        \\
+                                             & early\_stopping     & False           &                        \\
+                                             & l2\_regularization  & 0.3             &                        \\ \bottomrule
 \end{tabular}
 \caption{Results of the models with the best hyperparamters configuration}
 \label{tab:results}
@@ -250,10 +242,9 @@ In this section are reported the main outcomes of the hyperparameters tuning pha
 Table \ref{tab:results} showcases the best configuration and the public F1-scores results for each model.
 We decided to submit the evaluations performed by the Hist Gradient Boosting Tree Classifier.
 \section{Discussion}\label{sec:discussion}
-This classification task extensively relied upon Natural Language Processing library. Every library offers a wide range of tools that allows to effectively retrieve information from the text. We decided to cover more NLP libraries to benefit from the variety of materials at our disposal. Almost every library provides advanced features, such as Part Of Speech Tagging, that could have been beneficial to the classification but we decided not to include in this analysis. 
+This classification task extensively relied upon Natural Language Processing libraries. Each library offers a wide range of tools that allows to effectively retrieve information from the text. We decided to cover more NLP libraries to benefit from the variety of materials at our disposal. Almost every library provides advanced features, such as Part Of Speech Tagging, that could have been beneficial to the classification but we decided not to include in this analysis. 
 
-
-All the classification algorithms, and the majority of utilities employed in Section \ref{sec:model} and \ref{sec:hypertuning} come from the scikit-learn packages\cite{scikit-learn}. Alongside the classical classification algorithms, we decided to try the Histogram-based Gradient Tree Boosting Classifier because, like the Random Forest Classifier, it is an ensemble of decision tree. Given that the Random Forest Classifier was always among the best-performing algorithms for this task, we wanted to explore how the boosting technique would have performed for this job.
+All the classification algorithms, and the majority of utilities employed in Section \ref{sec:model} and \ref{sec:hypertuning} come from the scikit-learn packages\cite{scikit-learn}. Alongside the classical classification algorithms, we decided to try the Histogram-based Gradient Tree Boosting Classifier because, like the Random Forest Classifier, it is an ensemble of decision tree. We wanted to explore how the boosting technique would have performed for this job, and it led to very satisfactory results.
 \bibliography{bibliography}
 \bibliographystyle{ieeetr}
 
