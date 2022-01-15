@@ -158,37 +158,6 @@ sns.set_theme(style='darkgrid')
 
 ```python
 tweets = load_dataset()
-tweets.corr().style.format("{:.2}").background_gradient(cmap=plt.get_cmap('coolwarm'), axis=1)
-```
-
-
-
-
-<style  type="text/css" >
-#T_88063_row0_col0,#T_88063_row1_col1{
-            background-color:  #b40426;
-            color:  #f1f1f1;
-        }#T_88063_row0_col1,#T_88063_row1_col0{
-            background-color:  #3b4cc0;
-            color:  #f1f1f1;
-        }</style><table id="T_88063_" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >sentiment</th>        <th class="col_heading level0 col1" >ids</th>    </tr></thead><tbody>
-                <tr>
-                        <th id="T_88063_level0_row0" class="row_heading level0 row0" >sentiment</th>
-                        <td id="T_88063_row0_col0" class="data row0 col0" >1.0</td>
-                        <td id="T_88063_row0_col1" class="data row0 col1" >-0.24</td>
-            </tr>
-            <tr>
-                        <th id="T_88063_level0_row1" class="row_heading level0 row1" >ids</th>
-                        <td id="T_88063_row1_col0" class="data row1 col0" >-0.24</td>
-                        <td id="T_88063_row1_col1" class="data row1 col1" >1.0</td>
-            </tr>
-    </tbody></table>
-
-
-
-
-```python
-tweets = load_dataset()
 fig, ax = plt.subplots(figsize=(10, 8))
 
 d = {0: "Negative", 1:"Positive"}

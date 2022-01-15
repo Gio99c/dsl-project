@@ -4,3 +4,4 @@
 __pycache__/Preprocessing.cpython-38.pyc
 .ipynb_checkpoints/ModelSelection-checkpoint.ipynb
 __pycache__/model_selection.cpython-38.pyc
+*.pyc
