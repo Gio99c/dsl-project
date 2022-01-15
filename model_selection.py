@@ -8,14 +8,16 @@ from sklearn.model_selection import cross_val_score
 import time
 
 
+MODELS = [LinearSVC(random_state=42), RandomForestClassifier(random_state=42), BernoulliNB(), HistGradientBoostingClassifier(random_state=42)]
+MODEL_NAMES= ["Linear SVC", "Random Forest", "Bernoulli Nayve-Bayes", "Hist GBC"]
+
+
 def test_models(X : pd.DataFrame, y : pd.Series) -> pd.DataFrame:
     # Test 4 models and print results 
-    models = [LinearSVC(random_state=42), RandomForestClassifier(random_state=42), BernoulliNB(), HistGradientBoostingClassifier(random_state=42)]
-    model_names= ["Linear SVC", "Random Forest", "Bernoulli Nayve-Bayes", "Hist GBC"]
-    
+   
     f1_scores = []
 
-    for clf, name in zip(models, model_names):
+    for clf, name in zip(MODELS, MODEL_NAMES):
 
         print(f'Start training model: {name}')
 
@@ -30,7 +32,7 @@ def test_models(X : pd.DataFrame, y : pd.Series) -> pd.DataFrame:
 
         print(f'Score of {name} model performed: {f1}\n\n\n')
 
-        col1 = pd.Series(model_names)
+        col1 = pd.Series(MODEL_NAMES)
         col2 = pd.Series(f1_scores)
             
 
@@ -41,7 +43,7 @@ def test_models(X : pd.DataFrame, y : pd.Series) -> pd.DataFrame:
 
 
 def test_diff_preprocessing(X_train: pd.DataFrame, y_train: pd.DataFrame):
-    # Test all models with different preprocessing techiniques
+    # Test all models with  3 different preprocessing techiniques
 
     # WE + TF-DF + Sentiment 
     print("Test Word Embeddings + TF-DF + Sentiment: \n\n")
